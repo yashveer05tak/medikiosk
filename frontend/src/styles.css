@@ -1,0 +1,68 @@
+/* MediKiosk visual language and motion */
+
+body {
+  background: #e8f0ef;
+}
+
+.app-shell {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(20, 184, 166, 0.1), transparent 28rem),
+    linear-gradient(135deg, #f8fafc 0%, #edf5f4 52%, #e2e8f0 100%);
+}
+
+.app-nav {
+  backdrop-filter: blur(10px);
+}
+
+.app-mode {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .app-mode {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@keyframes flash-red {
+  0%, 100% {
+    background-color: #ef4444;
+  }
+  50% {
+    background-color: #7f1d1d;
+  }
+}
+
+.animate-flash-red {
+  animation: flash-red 1.5s infinite;
+}
+
+/* Touch scroll optimizations */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.kiosk-btn {
+  transition: all 0.15s ease-in-out;
+  transform: scale(1);
+}
+
+.kiosk-btn:active {
+  transform: scale(0.96);
+}
