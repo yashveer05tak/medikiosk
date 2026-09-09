@@ -11,6 +11,7 @@ export default function App() {
   const [role, setRole] = useState('patient'); // 'patient' or 'doctor'
   const [view, setView] = useState('intake'); // 'intake', 'dashboard', 'history'
   const [language, setLanguage] = useState('en');
+  const [darkTheme, setDarkTheme] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
@@ -78,16 +79,18 @@ export default function App() {
   };
 
   return (
-    <div className="app-shell min-h-screen bg-slate-100 flex flex-col font-sans text-slate-900">
+    <div className={`app-shell min-h-screen flex flex-col font-sans ${darkTheme ? 'theme-dark' : 'theme-light'}`}>
       {/* Header Bar */}
       <HeaderBar
         user={user}
         role={role}
         language={language}
+        darkTheme={darkTheme}
         onRoleSwitch={handleRoleSwitch}
         onLanguageChange={(lang) => setLanguage(lang)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogout={handleLogout}
+        onToggleTheme={() => setDarkTheme((prev) => !prev)}
       />
 
       {/* Sub Navigation Bar for View switching */}

@@ -1,13 +1,98 @@
 /* MediKiosk visual language and motion */
 
+:root {
+  color-scheme: light;
+}
+
 body {
   background: #e8f0ef;
 }
 
-.app-shell {
+.theme-light {
   background:
     radial-gradient(circle at 8% 8%, rgba(20, 184, 166, 0.1), transparent 28rem),
     linear-gradient(135deg, #f8fafc 0%, #edf5f4 52%, #e2e8f0 100%);
+  color: #0f172a;
+}
+
+.theme-dark {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(45, 212, 191, 0.12), transparent 28rem),
+    linear-gradient(135deg, #020817 0%, #0f172a 52%, #111827 100%);
+  color: #e2e8f0;
+  color-scheme: dark;
+}
+
+.theme-dark .app-nav {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+.theme-dark .bg-white,
+.theme-dark .bg-slate-50,
+.theme-dark .bg-slate-100,
+.theme-dark .bg-slate-800,
+.theme-dark .bg-slate-900 {
+  background-color: #0f172a !important;
+}
+
+.theme-dark .text-slate-800,
+.theme-dark .text-slate-700,
+.theme-dark .text-slate-600,
+.theme-dark .text-slate-500,
+.theme-dark .text-slate-400,
+.theme-dark .text-slate-300,
+.theme-dark .text-slate-200,
+.theme-dark .text-slate-900 {
+  color: #e2e8f0 !important;
+}
+
+.theme-dark .border-slate-200,
+.theme-dark .border-slate-300,
+.theme-dark .border-slate-700,
+.theme-dark .border-slate-800 {
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+.theme-dark input,
+.theme-dark textarea,
+.theme-dark select,
+.theme-dark button {
+  color: #e2e8f0;
+}
+
+.theme-dark input,
+.theme-dark textarea,
+.theme-dark select {
+  background-color: #111827 !important;
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+.theme-dark .text-teal-800,
+.theme-dark .text-teal-700,
+.theme-dark .text-emerald-800,
+.theme-dark .text-emerald-700 {
+  color: #99f6e4 !important;
+}
+
+.theme-dark .bg-teal-50,
+.theme-dark .bg-emerald-50,
+.theme-dark .bg-red-50,
+.theme-dark .bg-amber-50 {
+  background-color: rgba(15, 118, 110, 0.12) !important;
+}
+
+.theme-dark .bg-teal-100,
+.theme-dark .bg-emerald-100,
+.theme-dark .bg-red-100,
+.theme-dark .bg-amber-100 {
+  background-color: rgba(45, 212, 191, 0.12) !important;
+}
+
+.theme-dark .text-red-700,
+.theme-dark .text-amber-700,
+.theme-dark .text-teal-900 {
+  color: #f8fafc !important;
 }
 
 .app-nav {

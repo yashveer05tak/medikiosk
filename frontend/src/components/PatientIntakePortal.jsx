@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
-import { Mic, MicOff, Sparkles, ArrowRight, ArrowLeft, Loader2, Heart, ShieldAlert } from 'lucide-react';
+import { Mic, MicOff, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import { useVoiceRecognition } from '../utils/useVoiceRecognition.js';
 import { getTranslation } from '../utils/translations.js';
-import AyushSection from './AyushSection.jsx';
+import DynamicClinicalQuestions from './DynamicClinicalQuestions.jsx';
 import SoapCaseSheetView from './SoapCaseSheetView.jsx';
 
 export default function PatientIntakePortal({ language, onStructureComplete, onRedFlagDetected }) {
   const t = getTranslation(language);
 
-  const [step, setStep] = useState(0); // 0: Demographics, 1: Speech/Text Narration, 2: AYUSH Assessment, 3: Generated Case Sheet
+  const [step, setStep] = useState(0); // 0: Demographics, 1: Speech/Text Narration, 2: AI Interview Questions, 3: Generated Case Sheet
   const [patientName, setPatientName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [abhaId, setAbhaId] = useState('');
-  const [opdType, setOpdType] = useState('');
+  const [opdType, setOpdType] = useState('allopathic');
 
   const [chiefComplaint, setChiefComplaint] = useState('');
   const [formError, setFormError] = useState('');
-  const [ayushData, setAyushData] = useState({
-    prakriti: '',
-    agni: '',
-    koshtha: '',
-    doshaImbalance: ''
-  });
+  const [clinicalAnswers, setClinicalAnswers] = useState({});
 
   const [loading, setLoading] = useState(false);
   const [structuredResult, setStructuredResult] = useState(null);
@@ -53,7 +48,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       text: 'मुझे पिछले 2 घंटे से सीने में बहुत तेज भारी दर्द हो रहा है। सीने में दबाव लग रहा है और दर्द बाएं हाथ में जा रहा है। सांस नहीं आ रही है।'
     },
     {
-      label: '🌿 AYUSH Chronic Indigestion (Hindi Voice)',
+      label: '🧠 AI symptom interview (Hindi Voice)',
       text: 'मुझे 3 सप्ताह से पेट में भारीपन, खट्टी डकार और पेट जलने की शिकायत है। खाने के बाद पेट फूल जाता है और कब्ज रहता है।'
     },
     {
@@ -66,7 +61,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
     if (!patientName.trim()) { setFormError('Kripya patient ka pura naam bharen (Patient Full Name required)'); return; }
     if (!age.trim()) { setFormError('Kripya age bharen'); return; }
     if (!gender) { setFormError('Kripya gender select karen'); return; }
-    if (!opdType) { setFormError('Kripya OPD department select karen (Allopathic ya AYUSH)'); return; }
+    if (!opdType) { setFormError('Please select a clinical department.'); return; }
     setFormError('');
     setStep(1);
   };
@@ -88,7 +83,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
         abhaId,
         age,
         gender,
-        ayushData
+        clinicalAnswers
       };
 
       const result = await onStructureComplete(payload);
@@ -118,7 +113,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
         </div>
 
         <div className="flex gap-2">
-          {['Demographics', 'Voice/Text Intake', 'AYUSH Assessment', 'SOAP Case Sheet'].map((s, idx) => (
+          {['Demographics', 'Voice/Text Intake', 'AI Interview', 'SOAP Case Sheet'].map((s, idx) => (
             <span
               key={idx}
               className={`text-xs font-bold px-3 py-1.5 rounded-xl ${
@@ -195,17 +190,17 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
                   opdType === 'allopathic' ? 'border-teal-600 bg-teal-50 shadow-sm ring-2 ring-teal-200' : 'border-slate-200 hover:border-teal-300'
                 }`}
               >
-                <div className="font-bold text-sm text-slate-800">🏥 Allopathic General Medicine</div>
-                <div className="text-xs text-slate-500 mt-0.5">Modern Medical Practice & Diagnostics</div>
+                <div className="font-bold text-sm text-slate-800">🏥 General Clinical Intake</div>
+                <div className="text-xs text-slate-500 mt-0.5">AI interview tailored to your symptoms</div>
               </div>
               <div
-                onClick={() => { setOpdType('ayush'); setFormError(''); }}
+                onClick={() => { setOpdType('general'); setFormError(''); }}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                  opdType === 'ayush' ? 'border-emerald-600 bg-emerald-50 shadow-sm ring-2 ring-emerald-200' : 'border-slate-200 hover:border-emerald-300'
+                  opdType === 'general' ? 'border-emerald-600 bg-emerald-50 shadow-sm ring-2 ring-emerald-200' : 'border-slate-200 hover:border-emerald-300'
                 }`}
               >
-                <div className="font-bold text-sm text-slate-800">🌿 AYUSH Health Services</div>
-                <div className="text-xs text-slate-500 mt-0.5">Ayurvedic Prakriti & Holistic Assessment</div>
+                <div className="font-bold text-sm text-slate-800">🧠 AI Clinical Interview</div>
+                <div className="text-xs text-slate-500 mt-0.5">Adaptive questions for the reported problem</div>
               </div>
             </div>
           </div>
@@ -297,7 +292,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
             </button>
             <button
               onClick={() => {
-                if (opdType === 'ayush') {
+                if (opdType === 'general' || opdType === 'allopathic') {
                   setStep(2);
                 } else {
                   handleSubmitStructuring();
@@ -305,21 +300,22 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               }}
               className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md"
             >
-              {opdType === 'ayush' ? (t.next || 'Next: AYUSH Assessment') : (t.generateSummary || 'Generate AI Case Sheet')} <ArrowRight className="w-4 h-4" />
+              {t.next || 'Next: AI Interview'} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       )}
 
-      {/* STEP 2: AYUSH Assessment */}
+      {/* STEP 2: AI Interview Questions */}
       {step === 2 && (
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-slate-800">{t.ayushHeader || 'Step 3: AYUSH Ayurvedic Assessment'}</h3>
-          
-          <AyushSection
-            value={ayushData}
-            onChange={(newVal) => setAyushData(newVal)}
-            language={language}
+          <h3 className="text-lg font-bold text-slate-800">AI Clinical Interview</h3>
+          <p className="text-sm text-slate-500">Questions adapt to the reported complaint to capture the most relevant clinical context.</p>
+
+          <DynamicClinicalQuestions
+            complaint={chiefComplaint}
+            answers={clinicalAnswers}
+            onChange={setClinicalAnswers}
           />
 
           <div className="flex justify-between pt-4">

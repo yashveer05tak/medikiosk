@@ -1,15 +1,17 @@
 import React from 'react';
-import { HeartPulse, ShieldCheck, UserCheck, LogOut, Languages, Stethoscope, User, Sparkles } from 'lucide-react';
+import { HeartPulse, ShieldCheck, UserCheck, LogOut, Languages, Stethoscope, User, Sparkles, Moon, SunMedium } from 'lucide-react';
 import { getTranslation } from '../utils/translations.js';
 
 export default function HeaderBar({
   user,
   role,
   language,
+  darkTheme,
   onRoleSwitch,
   onLanguageChange,
   onOpenAuth,
-  onLogout
+  onLogout,
+  onToggleTheme
 }) {
   const t = getTranslation(language);
 
@@ -75,6 +77,17 @@ export default function HeaderBar({
               <option value="bn" className="bg-slate-900">বাংলা (Bengali)</option>
             </select>
           </div>
+
+          {/* Theme Toggle */}
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className="flex items-center gap-1.5 bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 text-slate-200 hover:text-white transition-all"
+            title={darkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {darkTheme ? <SunMedium className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-teal-300" />}
+            <span className="text-[11px] font-bold uppercase tracking-wide">{darkTheme ? 'Light' : 'Dark'}</span>
+          </button>
 
           {/* User Account / Login */}
           {user ? (
