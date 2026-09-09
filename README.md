@@ -4,7 +4,7 @@
 
 MediKiosk is a clinician-in-the-loop patient intake platform for healthcare centers, hospital OPDs, and AYUSH clinics. It turns structured voice or touch input into privacy-aware SOAP case sheets, supports multiple Indian languages, and gives doctors a focused verification workspace.
 
-**Developed by:** [Yashveer Tak](https://github.com/yashveer05tak)  
+**Developed by:** [Yashveer Tak](https://github.com/yashveer05tak)
 **Project:** Smart India Hackathon 2026, Problem Statement 26047
 
 ## Live website
