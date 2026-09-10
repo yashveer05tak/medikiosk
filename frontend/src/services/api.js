@@ -61,6 +61,31 @@ export const verifyCaseSheet = async (caseId, payload) => {
   return response.data;
 };
 
+export const uploadCaseAttachment = async (caseId, file) => {
+  const formData = new FormData();
+  formData.append('document', file);
+  const response = await api.post(`/case/${caseId}/attachments`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
+export const getCaseAttachmentUrl = (caseId, attachmentId) => {
+  return `${API_BASE_URL}/case/${caseId}/attachments/${attachmentId}`;
+};
+
+export const downloadCaseAttachment = async (caseId, attachmentId, filename) => {
+  const response = await api.get(getCaseAttachmentUrl(caseId, attachmentId), { responseType: 'blob' });
+  const blobUrl = URL.createObjectURL(response.data);
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(blobUrl);
+};
+
 export const getPDFDownloadUrl = (caseId) => {
   return `${API_BASE_URL}/case/${caseId}/pdf`;
 };

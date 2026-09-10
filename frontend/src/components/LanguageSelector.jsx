@@ -5,23 +5,18 @@ import { TRANSLATIONS } from '../utils/translations.js';
 const LANGUAGES = [
   { code: 'en', name: 'English', native: 'English', sub: 'General & International' },
   { code: 'hi', name: 'Hindi', native: 'हिन्दी', sub: 'उत्तर एवं मध्य भारत' },
-  { code: 'ta', name: 'Tamil', native: 'தமிழ்', sub: 'தமிழ்நாடு' },
-  { code: 'te', name: 'Telugu', native: 'తెలుగు', sub: 'ఆంధ్రప్రదేశ్ & తెలంగాణ' },
-  { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ', sub: 'ಕರ್ನಾಟಕ' },
-  { code: 'ml', name: 'Malayalam', native: 'മലയാളം', sub: 'കേരളം' },
-  { code: 'bn', name: 'Bengali', native: 'বাংলা', sub: 'পশ্চিমবঙ্গ & ত্রিপুরা' }
 ];
 
 export default function LanguageSelector({ selectedLanguage, onSelect }) {
-  const t = TRANSLATIONS[selectedLanguage] || TRANSLATIONS.en;
+  const t = TRANSLATIONS[selectedLanguage] || TRANSLATIONS.hi;
 
   const handleSpeakWelcome = (langCode, e) => {
     e.stopPropagation();
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
-      const textToSpeak = TRANSLATIONS[langCode]?.welcome || "Welcome";
+      const textToSpeak = TRANSLATIONS[langCode]?.welcome || TRANSLATIONS.hi.welcome;
       const utter = new SpeechSynthesisUtterance(textToSpeak);
-      utter.lang = langCode === 'en' ? 'en-IN' : `${langCode}-IN`;
+      utter.lang = langCode === 'en' ? 'en-IN' : 'hi-IN';
       window.speechSynthesis.speak(utter);
     }
   };
@@ -35,7 +30,7 @@ export default function LanguageSelector({ selectedLanguage, onSelect }) {
         <h2 className="text-3xl font-bold text-slate-800">{t.welcome}</h2>
         <p className="text-slate-500 mt-2 text-lg">{t.selectLanguage}</p>
         <p className="text-teal-600 font-medium text-sm mt-1">
-          कृपया अपनी भाषा चुनें | மொழியைத் தேர்ந்தெடுக்கவும் | మీ భాషను ఎంచుకోండి
+          कृपया अपनी भाषा चुनें
         </p>
       </div>
 

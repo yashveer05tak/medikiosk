@@ -88,6 +88,48 @@ export const getCaseById = async (req, res) => {
   }
 };
 
+// POST /api/case/:id/attachments
+export const uploadCaseAttachment = async (req, res) => {
+  try {
+    const caseItem = await CaseSheetModel.findByCaseId(req.params.id);
+    if (!caseItem) {
+      return res.status(404).json({ error: 'Case sheet not found' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'A document file is required' });
+    }
+
+    const attachment = {
+      attachmentId: crypto.randomUUID(),
+      originalName: req.file.originalname,
+      storedName: req.file.filename,
+      path: req.file.path,
+      mimeType: req.file.mimetype,
+      size: req.file.size,
+      uploadedAt: new Date()
+    };
+
+    const updatedCase = await CaseSheetModel.appendAttachment(req.params.id, attachment);
+    res.status(201).json({ attachment, caseSheet: updatedCase });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// GET /api/case/:id/attachments/:attachmentId
+export const downloadCaseAttachment = async (req, res) => {
+  try {
+    const caseItem = await CaseSheetModel.findByCaseId(req.params.id);
+    const attachment = caseItem?.attachments?.find(item => item.attachmentId === req.params.attachmentId);
+    if (!attachment) {
+      return res.status(404).json({ error: 'Attachment not found' });
+    }
+    res.download(attachment.path, attachment.originalName);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // PUT /api/case/:id/verify
 // Doctor Review & Human-in-the-Loop Sign-off Endpoint
 export const verifyCase = async (req, res) => {

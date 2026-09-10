@@ -1,4 +1,4 @@
-// Multilingual dictionary for MediKiosk AI supporting 7 Indian languages
+// Hindi UI translations for MediKiosk AI.
 
 export const TRANSLATIONS = {
   en: {
@@ -714,15 +714,10 @@ export const TRANSLATIONS = {
 };
 
 export const getTranslation = (langCode) => {
-  return TRANSLATIONS[langCode] || TRANSLATIONS.en;
+  return TRANSLATIONS[langCode] || TRANSLATIONS.hi;
 };
 
 export const SPEECH_LANG_CODES = {
   en: 'en-IN',
-  hi: 'hi-IN',
-  ta: 'ta-IN',
-  te: 'te-IN',
-  kn: 'kn-IN',
-  ml: 'ml-IN',
-  bn: 'bn-IN'
+  hi: 'hi-IN'
 };

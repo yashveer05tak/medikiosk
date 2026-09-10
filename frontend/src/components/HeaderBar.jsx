@@ -20,7 +20,7 @@ export default function HeaderBar({
       <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
         {/* Branding & SIH Tag */}
         <div className="flex items-center gap-3">
-          <div className="bg-teal-500 p-2.5 rounded-xl text-slate-950 shadow-md shadow-teal-500/20 font-black">
+          <div className="brand-mark bg-teal-500 p-2.5 rounded-xl text-white shadow-md shadow-teal-500/20 font-black">
             <HeartPulse className="w-6 h-6" />
           </div>
           <div>
@@ -30,7 +30,7 @@ export default function HeaderBar({
                 <Sparkles className="w-3 h-3" /> SIH 2026 (PS 26047)
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">AI-assisted multilingual clinical intake • Developed by Yashveer Tak</p>
+              <p className="text-[11px] text-slate-400 font-medium">{language === 'en' ? 'AI-assisted clinical intake • Developed by Yashveer Tak' : 'एआई-सहायित क्लिनिकल पंजीकरण • Yashveer Tak द्वारा विकसित'}</p>
           </div>
         </div>
 
@@ -46,7 +46,7 @@ export default function HeaderBar({
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <User className="w-3.5 h-3.5" /> Patient Intake
+              <User className="w-3.5 h-3.5" /> {language === 'en' ? 'Patient Intake' : 'रोगी पंजीकरण'}
             </button>
             <button
               onClick={() => onRoleSwitch('doctor')}
@@ -56,7 +56,7 @@ export default function HeaderBar({
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Stethoscope className="w-3.5 h-3.5" /> Doctor Portal
+              <Stethoscope className="w-3.5 h-3.5" /> {language === 'en' ? 'Doctor Portal' : 'डॉक्टर पोर्टल'}
             </button>
           </div>
 
@@ -70,11 +70,6 @@ export default function HeaderBar({
             >
               <option value="en" className="bg-slate-900">English</option>
               <option value="hi" className="bg-slate-900">हिन्दी (Hindi)</option>
-              <option value="ta" className="bg-slate-900">தமிழ் (Tamil)</option>
-              <option value="te" className="bg-slate-900">తెలుగు (Telugu)</option>
-              <option value="kn" className="bg-slate-900">ಕನ್ನಡ (Kannada)</option>
-              <option value="ml" className="bg-slate-900">മലയാളം (Malayalam)</option>
-              <option value="bn" className="bg-slate-900">বাংলা (Bengali)</option>
             </select>
           </div>
 
@@ -86,7 +81,7 @@ export default function HeaderBar({
             title={darkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {darkTheme ? <SunMedium className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-teal-300" />}
-            <span className="text-[11px] font-bold uppercase tracking-wide">{darkTheme ? 'Light' : 'Dark'}</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide">{darkTheme ? (language === 'en' ? 'Light' : 'हल्का') : (language === 'en' ? 'Dark' : 'गहरा')}</span>
           </button>
 
           {/* User Account / Login */}
@@ -110,7 +105,7 @@ export default function HeaderBar({
               onClick={onOpenAuth}
               className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95"
             >
-              <ShieldCheck className="w-4 h-4" /> Login / Register
+              <ShieldCheck className="w-4 h-4" /> {language === 'en' ? 'Login / Register' : 'प्रवेश / पंजीकरण'}
             </button>
           )}
         </div>

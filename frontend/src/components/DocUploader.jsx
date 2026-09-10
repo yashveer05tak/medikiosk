@@ -6,6 +6,7 @@ import { getTranslation } from '../utils/translations.js';
 export default function DocUploader({ session, onUploadSuccess, onNext, onBack }) {
   const lang = session?.language || 'en';
   const t = getTranslation(lang);
+  const isEnglish = lang === 'en';
 
   const [loading, setLoading] = useState(false);
   const [customText, setCustomText] = useState('');
@@ -93,9 +94,9 @@ export default function DocUploader({ session, onUploadSuccess, onNext, onBack }
               onChange={(e) => setDocType(e.target.value)}
               className="w-full p-3 rounded-lg border border-slate-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
             >
-              <option value="Lab Report">Lab / Blood Report</option>
-              <option value="Prescription">Doctor Prescription</option>
-              <option value="Discharge Summary">Discharge Summary</option>
+              <option value="Lab Report">{isEnglish ? 'Lab / Blood Report' : 'लैब / रक्त रिपोर्ट'}</option>
+              <option value="Prescription">{isEnglish ? 'Doctor Prescription' : 'डॉक्टर की पर्ची'}</option>
+              <option value="Discharge Summary">{isEnglish ? 'Discharge Summary' : 'डिस्चार्ज सारांश'}</option>
             </select>
           </div>
 
@@ -174,7 +175,7 @@ export default function DocUploader({ session, onUploadSuccess, onNext, onBack }
           <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <h4 className="font-bold text-sm text-slate-800 mb-3">{t.linkedRecords} ({session.clinicalData?.extractedDocuments?.length || 0})</h4>
             {session.clinicalData?.extractedDocuments?.length === 0 ? (
-              <p className="text-xs text-slate-400 italic">No documents linked to this session yet.</p>
+              <p className="text-xs text-slate-400 italic">{isEnglish ? 'No documents linked to this session yet.' : 'इस सत्र से अभी कोई दस्तावेज़ जुड़ा नहीं है।'}</p>
             ) : (
               <div className="space-y-2.5">
                 {session.clinicalData.extractedDocuments.map((doc, idx) => (

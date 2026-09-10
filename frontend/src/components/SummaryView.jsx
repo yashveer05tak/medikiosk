@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { FileText, Code, CheckCircle, Download, RotateCcw, Copy } from 'lucide-react';
 
-export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
+export default function SummaryView({ summaryText, fhirBundle, onRestart, language = 'hi' }) {
   const [activeTab, setActiveTab] = useState('physician'); // 'physician' or 'fhir'
   const [copied, setCopied] = useState(false);
+  const isEnglish = language === 'en';
 
   // A light-weight parser to render markdown into basic styled HTML elements
   const renderMarkdown = (mdString = '') => {
@@ -78,8 +79,8 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
         <div className="inline-flex p-3 bg-white/10 rounded-full mb-4">
           <CheckCircle className="w-12 h-12" />
         </div>
-        <h2 className="text-3xl font-bold">Clinical Intake Completed Successfully</h2>
-        <p className="opacity-90 mt-2 text-base">Your patient summary and ABDM-FHIR bundles are compiled for the clinician.</p>
+        <h2 className="text-3xl font-bold">{isEnglish ? 'Clinical Intake Completed Successfully' : 'क्लिनिकल पंजीकरण सफलतापूर्वक पूरा हुआ'}</h2>
+        <p className="opacity-90 mt-2 text-base">{isEnglish ? 'Your patient summary and ABDM-FHIR bundles are compiled for the clinician.' : 'आपका रोगी सारांश और ABDM-FHIR बंडल चिकित्सक के लिए तैयार हैं।'}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -98,7 +99,7 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
                       : 'text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  <FileText className="w-4 h-4" /> Physician Summary
+                  <FileText className="w-4 h-4" /> {isEnglish ? 'Physician Summary' : 'चिकित्सक सारांश'}
                 </button>
                 <button
                   onClick={() => setActiveTab('fhir')}
@@ -108,7 +109,7 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
                       : 'text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  <Code className="w-4 h-4" /> FHIR JSON Payload
+                  <Code className="w-4 h-4" /> {isEnglish ? 'FHIR JSON Payload' : 'FHIR JSON डेटा'}
                 </button>
               </div>
 
@@ -117,14 +118,14 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
                   onClick={handleCopy}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
                 >
-                  <Copy className="w-3.5 h-3.5" /> {copied ? 'Copied!' : 'Copy'}
+                  <Copy className="w-3.5 h-3.5" /> {copied ? (isEnglish ? 'Copied!' : 'कॉपी हो गया!') : (isEnglish ? 'Copy' : 'कॉपी करें')}
                 </button>
                 {activeTab === 'fhir' && (
                   <button
                     onClick={handleDownload}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 border border-teal-200 rounded-lg text-xs font-bold text-teal-700 hover:bg-teal-100 transition-all"
                   >
-                    <Download className="w-3.5 h-3.5" /> Download FHIR
+                    <Download className="w-3.5 h-3.5" /> {isEnglish ? 'Download FHIR' : 'FHIR डाउनलोड करें'}
                   </button>
                 )}
               </div>
@@ -150,12 +151,12 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
         {/* Right Side: Quick Action Options */}
         <div className="lg:col-span-3 space-y-6">
           <div className="bg-teal-950 text-white p-6 rounded-3xl shadow-md">
-            <h3 className="font-bold text-lg mb-3">Clinician Integration</h3>
+            <h3 className="font-bold text-lg mb-3">{isEnglish ? 'Clinician Integration' : 'चिकित्सक एकीकरण'}</h3>
             <p className="text-xs text-teal-300 leading-relaxed">
-              This summary is ready to be fetched by the doctor's EMR workspace automatically via the session UUID.
+              {isEnglish ? "This summary is ready to be fetched by the doctor's EMR workspace automatically via the session UUID." : 'यह सारांश सत्र UUID के माध्यम से डॉक्टर के ईएमआर कार्यक्षेत्र में स्वतः प्राप्त किया जा सकता है।'}
             </p>
             <div className="border-t border-teal-800 my-4 pt-4">
-              <span className="block text-[10px] text-teal-400 uppercase tracking-wider font-bold">FHIR Standards Used:</span>
+              <span className="block text-[10px] text-teal-400 uppercase tracking-wider font-bold">{isEnglish ? 'FHIR Standards Used:' : 'उपयोग किए गए FHIR मानक:'}</span>
               <ul className="text-xs text-teal-100 mt-2 space-y-1.5">
                 <li>• Bundle (Collection)</li>
                 <li>• Patient Demographics</li>
@@ -170,7 +171,7 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart }) {
             onClick={onRestart}
             className="w-full flex items-center justify-center gap-2 py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-bold text-base shadow-lg hover:shadow-teal-500/10 transition-all active:scale-[0.98]"
           >
-            <RotateCcw className="w-5 h-5" /> Start Next Intake
+            <RotateCcw className="w-5 h-5" /> {isEnglish ? 'Start Next Intake' : 'अगला पंजीकरण शुरू करें'}
           </button>
         </div>
       </div>

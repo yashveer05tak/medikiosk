@@ -7,6 +7,7 @@ import SoapCaseSheetView from './SoapCaseSheetView.jsx';
 
 export default function PatientIntakePortal({ language, onStructureComplete, onRedFlagDetected }) {
   const t = getTranslation(language);
+  const isEnglish = language === 'en';
 
   const [step, setStep] = useState(0); // 0: Demographics, 1: Speech/Text Narration, 2: AI Interview Questions, 3: Generated Case Sheet
   const [patientName, setPatientName] = useState('');
@@ -52,7 +53,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       text: 'मुझे 3 सप्ताह से पेट में भारीपन, खट्टी डकार और पेट जलने की शिकायत है। खाने के बाद पेट फूल जाता है और कब्ज रहता है।'
     },
     {
-      label: '🦴 Osteoarthritis Knee Pain (English Voice)',
+      label: isEnglish ? '🦴 Osteoarthritis Knee Pain (English Voice)' : '🦴 घुटने का ऑस्टियोआर्थराइटिस दर्द (हिन्दी आवाज़)',
       text: 'My right knee has been paining for 6 months. Worsens when climbing stairs or walking, feels better when sitting down.'
     }
   ];
@@ -107,13 +108,13 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       <div className="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
         <div>
           <span className="text-[10px] font-extrabold uppercase bg-teal-100 text-teal-800 px-3 py-1 rounded-full">
-            Patient Intake Portal • SIH 2026
+            {isEnglish ? 'Patient Intake Portal • SIH 2026' : 'रोगी पंजीकरण पोर्टल • SIH 2026'}
           </span>
-          <h2 className="text-2xl font-black text-slate-800 mt-1">AI-Assisted Patient Case-Taking</h2>
+          <h2 className="text-2xl font-black text-slate-800 mt-1">{isEnglish ? 'AI-Assisted Patient Case-Taking' : 'एआई-सहायित रोगी केस-पंजीकरण'}</h2>
         </div>
 
         <div className="flex gap-2">
-          {['Demographics', 'Voice/Text Intake', 'AI Interview', 'SOAP Case Sheet'].map((s, idx) => (
+          {(isEnglish ? ['Demographics', 'Voice/Text Intake', 'AI Interview', 'SOAP Case Sheet'] : ['रोगी विवरण', 'आवाज़/टेक्स्ट पंजीकरण', 'एआई साक्षात्कार', 'SOAP केस शीट']).map((s, idx) => (
             <span
               key={idx}
               className={`text-xs font-bold px-3 py-1.5 rounded-xl ${
@@ -135,7 +136,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Patient Full Name <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Patient Full Name' : 'रोगी का पूरा नाम'} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={patientName}
@@ -145,7 +146,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">ABHA ID (Ayushman Bharat) <span className="text-slate-400 font-normal text-[10px]">(optional)</span></label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'ABHA ID (Ayushman Bharat)' : 'आभा आईडी (आयुष्मान भारत)'} <span className="text-slate-400 font-normal text-[10px]">({isEnglish ? 'optional' : 'वैकल्पिक'})</span></label>
               <input
                 type="text"
                 value={abhaId}
@@ -155,7 +156,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Age <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Age' : 'आयु'} <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 min="1"
@@ -167,22 +168,22 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Gender <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Gender' : 'लिंग'} <span className="text-red-500">*</span></label>
               <select
                 value={gender}
                 onChange={(e) => { setGender(e.target.value); setFormError(''); }}
                 className="w-full p-3 rounded-xl border border-slate-300 text-sm text-slate-800"
               >
-                <option value="">-- Select Gender --</option>
-                <option value="Male">Male (Purush)</option>
-                <option value="Female">Female (Mahila)</option>
-                <option value="Other">Other (Anya)</option>
+                <option value="">-- {isEnglish ? 'Select Gender' : 'लिंग चुनें'} --</option>
+                <option value="Male">{isEnglish ? 'Male' : 'पुरुष'}</option>
+                <option value="Female">{isEnglish ? 'Female' : 'महिला'}</option>
+                <option value="Other">{isEnglish ? 'Other' : 'अन्य'}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-2">Select Clinical Department: <span className="text-red-500">*</span></label>
+            <label className="block text-xs font-bold text-slate-700 mb-2">{isEnglish ? 'Select Clinical Department:' : 'क्लिनिकल विभाग चुनें:'} <span className="text-red-500">*</span></label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
                 onClick={() => { setOpdType('allopathic'); setFormError(''); }}
@@ -190,8 +191,8 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
                   opdType === 'allopathic' ? 'border-teal-600 bg-teal-50 shadow-sm ring-2 ring-teal-200' : 'border-slate-200 hover:border-teal-300'
                 }`}
               >
-                <div className="font-bold text-sm text-slate-800">🏥 General Clinical Intake</div>
-                <div className="text-xs text-slate-500 mt-0.5">AI interview tailored to your symptoms</div>
+                <div className="font-bold text-sm text-slate-800">{isEnglish ? '🏥 General Clinical Intake' : '🏥 सामान्य क्लिनिकल पंजीकरण'}</div>
+                <div className="text-xs text-slate-500 mt-0.5">{isEnglish ? 'AI interview tailored to your symptoms' : 'आपके लक्षणों के अनुसार एआई साक्षात्कार'}</div>
               </div>
               <div
                 onClick={() => { setOpdType('general'); setFormError(''); }}
@@ -199,8 +200,8 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
                   opdType === 'general' ? 'border-emerald-600 bg-emerald-50 shadow-sm ring-2 ring-emerald-200' : 'border-slate-200 hover:border-emerald-300'
                 }`}
               >
-                <div className="font-bold text-sm text-slate-800">🧠 AI Clinical Interview</div>
-                <div className="text-xs text-slate-500 mt-0.5">Adaptive questions for the reported problem</div>
+                <div className="font-bold text-sm text-slate-800">{isEnglish ? '🧠 AI Clinical Interview' : '🧠 एआई क्लिनिकल साक्षात्कार'}</div>
+                <div className="text-xs text-slate-500 mt-0.5">{isEnglish ? 'Adaptive questions for the reported problem' : 'बताई गई समस्या के अनुसार प्रश्न'}</div>
               </div>
             </div>
           </div>
@@ -216,7 +217,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               onClick={handleStep0Next}
               className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md transition-all"
             >
-              Continue to Voice/Text Intake <ArrowRight className="w-4 h-4" />
+              {isEnglish ? 'Continue to Voice/Text Intake' : 'आवाज़/टेक्स्ट पंजीकरण पर जाएँ'} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -226,15 +227,15 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       {step === 1 && (
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-slate-800">Step 2: Describe Symptoms (Voice or Text)</h3>
+            <h3 className="text-lg font-bold text-slate-800">चरण 2: लक्षण बताएं (आवाज़ या टेक्स्ट)</h3>
             <span className="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-lg font-bold">
-              Language: {language.toUpperCase()}
+              {isEnglish ? 'Language: English' : 'भाषा: हिन्दी'}
             </span>
           </div>
 
           <div className="relative">
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              Speak into microphone or type your symptoms below:
+              {isEnglish ? 'Speak into microphone or type your symptoms below:' : 'माइक्रोफ़ोन में बोलें या नीचे अपने लक्षण लिखें:'}
             </label>
             <textarea
               rows={6}
@@ -288,7 +289,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               onClick={() => setStep(0)}
               className="px-6 py-3 border border-slate-300 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50"
             >
-              Back
+              {isEnglish ? 'Back' : 'पीछे जाएँ'}
             </button>
             <button
               onClick={() => {
@@ -300,7 +301,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               }}
               className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md"
             >
-              {t.next || 'Next: AI Interview'} <ArrowRight className="w-4 h-4" />
+              {t.next || (isEnglish ? 'Next: AI Interview' : 'आगे: एआई साक्षात्कार')} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -309,8 +310,8 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       {/* STEP 2: AI Interview Questions */}
       {step === 2 && (
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-slate-800">AI Clinical Interview</h3>
-          <p className="text-sm text-slate-500">Questions adapt to the reported complaint to capture the most relevant clinical context.</p>
+          <h3 className="text-lg font-bold text-slate-800">{isEnglish ? 'AI Clinical Interview' : 'एआई क्लिनिकल साक्षात्कार'}</h3>
+          <p className="text-sm text-slate-500">{isEnglish ? 'Questions adapt to the reported complaint to capture the most relevant clinical context.' : 'सबसे उपयोगी क्लिनिकल जानकारी लेने के लिए प्रश्न आपकी शिकायत के अनुसार बदलते हैं।'}</p>
 
           <DynamicClinicalQuestions
             complaint={chiefComplaint}
@@ -323,7 +324,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               onClick={() => setStep(1)}
               className="px-6 py-3 border border-slate-300 text-slate-700 font-bold rounded-xl text-sm hover:bg-slate-50"
             >
-              Back
+              {isEnglish ? 'Back' : 'पीछे जाएँ'}
             </button>
             <button
               onClick={handleSubmitStructuring}
@@ -331,7 +332,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               className="flex items-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow-lg transition-all disabled:opacity-50"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Structuring SOAP Case Sheet...' : 'Submit & Generate SOAP Note'}
+              {loading ? (isEnglish ? 'Structuring SOAP Case Sheet...' : 'SOAP केस शीट तैयार हो रही है...') : (isEnglish ? 'Submit & Generate SOAP Note' : 'जमा करें और SOAP नोट बनाएं')}
             </button>
           </div>
         </div>
@@ -343,17 +344,17 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
           <div className="bg-teal-50 border border-teal-200 p-4 rounded-2xl flex items-center justify-between">
             <div className="flex items-center gap-3 text-teal-900 font-bold text-sm">
               <Sparkles className="w-5 h-5 text-teal-600" />
-              Case Sheet structured into SOAP Format. Status: <strong>isVerified = false</strong> (Pending Doctor Verification).
+              {isEnglish ? 'Case Sheet structured into SOAP Format. Status:' : 'केस शीट SOAP प्रारूप में तैयार है। स्थिति:'} <strong>isVerified = false</strong> ({isEnglish ? 'Pending Doctor Verification' : 'डॉक्टर सत्यापन लंबित'}).
             </div>
             <button
               onClick={() => setStep(0)}
               className="px-4 py-2 bg-white border border-teal-300 text-teal-800 text-xs font-bold rounded-xl hover:bg-teal-100"
             >
-              New Intake Session
+              {isEnglish ? 'New Intake Session' : 'नया पंजीकरण सत्र'}
             </button>
           </div>
 
-          <SoapCaseSheetView caseData={structuredResult} />
+          <SoapCaseSheetView caseData={structuredResult} language={language} />
         </div>
       )}
     </div>

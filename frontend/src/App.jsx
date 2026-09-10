@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import HeaderBar from './components/HeaderBar.jsx';
 import AuthModal from './components/AuthModal.jsx';
-import PatientIntakePortal from './components/PatientIntakePortal.jsx';
-import DoctorDashboard from './components/DoctorDashboard.jsx';
-import PatientHistoryView from './components/PatientHistoryView.jsx';
+import PatientLanguagePage from './components/PatientLanguagePage.jsx';
+import PatientPortalPage from './components/PatientPortalPage.jsx';
+import DoctorPortalPage from './components/DoctorPortalPage.jsx';
 import TriageAlert from './components/TriageAlert.jsx';
 import { getCurrentUser, structureCaseSheet } from './services/api.js';
 
 export default function App() {
   const [role, setRole] = useState('patient'); // 'patient' or 'doctor'
-  const [view, setView] = useState('intake'); // 'intake', 'dashboard', 'history'
-  const [language, setLanguage] = useState('en');
+  const [view, setView] = useState('language'); // 'language', 'patient', 'doctor'
+  const [language, setLanguage] = useState('hi');
   const [darkTheme, setDarkTheme] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function App() {
           setUser(res.user);
           if (res.user.role === 'doctor') {
             setRole('doctor');
-            setView('dashboard');
+            setView('doctor');
           }
         }
       } catch (err) {
@@ -44,9 +44,9 @@ export default function App() {
     }
     setRole(newRole);
     if (newRole === 'doctor') {
-      setView('dashboard');
+      setView('doctor');
     } else {
-      setView('intake');
+      setView('language');
     }
   };
 
@@ -54,10 +54,10 @@ export default function App() {
     setUser(loggedUser);
     if (loggedUser.role === 'doctor') {
       setRole('doctor');
-      setView('dashboard');
+      setView('doctor');
     } else {
       setRole('patient');
-      setView('intake');
+      setView('language');
     }
   };
 
@@ -65,7 +65,7 @@ export default function App() {
     localStorage.removeItem('medikiosk_token');
     setUser(null);
     setRole('patient');
-    setView('intake');
+    setView('language');
   };
 
   const handleStructureCase = async (payload) => {
@@ -93,75 +93,41 @@ export default function App() {
         onToggleTheme={() => setDarkTheme((prev) => !prev)}
       />
 
-      {/* Sub Navigation Bar for View switching */}
-      <div className="app-nav bg-white border-b border-slate-200 px-4 sm:px-6 py-2 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex gap-2 flex-wrap">
-            {role === 'patient' ? (
-              <>
-                <button
-                  onClick={() => setView('intake')}
-                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    view === 'intake' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  📝 New Patient Intake
-                </button>
-                <button
-                  onClick={() => setView('history')}
-                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    view === 'history' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  📁 History & PDF Exports
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => setView('dashboard')}
-                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    view === 'dashboard' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  🩺 Doctor Review Dashboard
-                </button>
-                <button
-                  onClick={() => setView('history')}
-                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    view === 'history' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  📁 All Clinical Case Sheets
-                </button>
-              </>
-            )}
-          </div>
-
-          <div className="app-mode text-[11px] font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">
-            {role === 'doctor' ? '👨‍⚕️ Mode: Doctor Verification Portal' : '👤 Mode: Patient Case-Taking Portal'}
+      {view !== 'language' && (
+        <div className="app-nav bg-white/80 border-b border-slate-200 px-4 sm:px-6 py-3 shadow-sm">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 flex-wrap">
+            <span className="app-mode text-[11px] font-black uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
+              {role === 'doctor'
+                ? (language === 'en' ? 'Doctor Portal' : 'डॉक्टर पोर्टल')
+                : (language === 'en' ? 'Patient Portal' : 'रोगी पोर्टल')}
+            </span>
+            <button type="button" onClick={() => role === 'doctor' ? setView('doctor') : setView('language')} className="text-xs font-bold text-slate-600 hover:text-blue-700">
+              {role === 'doctor' ? (language === 'en' ? 'Review Cases' : 'केस की समीक्षा करें') : (language === 'en' ? 'Change language' : 'भाषा बदलें')}
+            </button>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Content Area */}
       <main className="flex-grow py-5 sm:py-7">
-        {view === 'intake' && (
-          <PatientIntakePortal
-            key={language}
+        {view === 'language' && (
+          <PatientLanguagePage
             language={language}
+            onSelectLanguage={setLanguage}
+            onContinue={() => setView('patient')}
+          />
+        )}
+
+        {view === 'patient' && (
+          <PatientPortalPage
+            language={language}
+            onLanguageChange={() => setView('language')}
             onStructureComplete={handleStructureCase}
             onRedFlagDetected={handleRedFlagTrigger}
           />
         )}
 
-        {view === 'dashboard' && (
-          <DoctorDashboard user={user} />
-        )}
-
-        {view === 'history' && (
-          <PatientHistoryView language={language} />
-        )}
+        {view === 'doctor' && <DoctorPortalPage user={user} language={language} />}
       </main>
 
       {/* Authentication Modal */}
@@ -169,6 +135,7 @@ export default function App() {
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onAuthSuccess={handleAuthSuccess}
+        language={language}
       />
 
       {/* Emergency Red Flag Overlay */}
@@ -181,7 +148,7 @@ export default function App() {
 
       {/* SIH 2026 Kiosk Footer */}
       <footer className="bg-slate-900 border-t border-slate-800 text-white px-6 py-4 text-center text-xs text-slate-400">
-        MediKiosk • Smart India Hackathon (SIH 2026) Problem Statement 26047
+        {language === 'en' ? 'MediKiosk • Smart India Hackathon (SIH 2026) Problem Statement 26047' : 'MediKiosk • स्मार्ट इंडिया हैकाथॉन (SIH 2026) समस्या विवरण 26047'}
       </footer>
     </div>
   );

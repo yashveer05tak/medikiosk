@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Stethoscope, CheckCircle2, FileText, Download, Edit3, Save, ShieldAlert, Sparkles, UserCheck, RefreshCw } from 'lucide-react';
-import { getAllCases, verifyCaseSheet, getPDFDownloadUrl } from '../services/api.js';
+import { getAllCases, verifyCaseSheet, getPDFDownloadUrl, downloadCaseAttachment } from '../services/api.js';
 import SoapCaseSheetView from './SoapCaseSheetView.jsx';
 
-export default function DoctorDashboard({ user }) {
+export default function DoctorDashboard({ user, language = 'hi' }) {
+  const isEnglish = language === 'en';
   const [cases, setCases] = useState([]);
   const [selectedCase, setSelectedCase] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -114,8 +115,16 @@ export default function DoctorDashboard({ user }) {
     window.open(url, '_blank');
   };
 
+  const handleDownloadAttachment = async (attachment) => {
+    try {
+      await downloadCaseAttachment(selectedCase.caseId, attachment.attachmentId, attachment.originalName);
+    } catch (err) {
+      setActionError(isEnglish ? 'The report could not be downloaded.' : 'रिपोर्ट डाउनलोड नहीं हो सकी।');
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="doctor-dashboard max-w-7xl mx-auto px-4 py-6">
       {/* Dashboard Banner */}
       <div className="bg-slate-900 text-white p-6 rounded-3xl mb-6 flex justify-between items-center flex-wrap gap-4 shadow-lg">
         <div className="flex items-center gap-3">
@@ -124,13 +133,13 @@ export default function DoctorDashboard({ user }) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-black">Doctor Review & Human-in-the-Loop Dashboard</h2>
+              <h2 className="text-2xl font-black">{isEnglish ? 'Doctor Review & Human-in-the-Loop Dashboard' : 'डॉक्टर समीक्षा और मानव-नियंत्रित डैशबोर्ड'}</h2>
               <span className="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                SIH 2026 Verification Portal
+                {isEnglish ? 'SIH 2026 Verification Portal' : 'SIH 2026 सत्यापन पोर्टल'}
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Review AI SOAP case sheets, edit diagnosis/prescriptions, and perform digital sign-off.
+              {isEnglish ? 'Review AI SOAP case sheets, edit diagnosis/prescriptions, and perform digital sign-off.' : 'एआई SOAP केस शीट की समीक्षा करें, निदान/दवाएं संपादित करें और डिजिटल सत्यापन करें।'}
             </p>
           </div>
         </div>
@@ -141,7 +150,7 @@ export default function DoctorDashboard({ user }) {
           className="flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition-all disabled:opacity-60"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          {loading ? 'Refreshing...' : 'Refresh Cases'}
+          {loading ? (isEnglish ? 'Refreshing...' : 'रीफ्रेश हो रहा है...') : (isEnglish ? 'Refresh Cases' : 'केस रीफ्रेश करें')}
         </button>
       </div>
 
@@ -150,13 +159,13 @@ export default function DoctorDashboard({ user }) {
         {/* Left Side 1: Cases Navigation List */}
         <div className="lg:col-span-4 space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            Incoming Intake Queue ({cases.length})
+            {isEnglish ? 'Incoming Intake Queue' : 'आने वाले पंजीकरण'} ({cases.length})
           </h3>
 
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {cases.length === 0 ? (
               <div className="bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-400">
-                No active case sheets in queue. Submit an intake form to test.
+                {isEnglish ? 'No active case sheets in queue. Submit an intake form to test.' : 'कतार में कोई सक्रिय केस शीट नहीं है। जांच के लिए पंजीकरण फॉर्म जमा करें।'}
               </div>
             ) : (
               cases.map((c) => (
@@ -175,11 +184,11 @@ export default function DoctorDashboard({ user }) {
                     </span>
                     {c.isVerified ? (
                       <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Verified
+                        <CheckCircle2 className="w-3 h-3" /> {isEnglish ? 'Verified' : 'सत्यापित'}
                       </span>
                     ) : (
                       <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                        Pending Verification
+                        {isEnglish ? 'Pending Verification' : 'सत्यापन लंबित'}
                       </span>
                     )}
                   </div>
@@ -191,7 +200,7 @@ export default function DoctorDashboard({ user }) {
 
                   {c.isRedFlag && (
                     <span className="inline-block mt-2 text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                      🚨 Red Flag Emergency
+                      {isEnglish ? '🚨 Red Flag Emergency' : '🚨 आपातकालीन चेतावनी'}
                     </span>
                   )}
                 </div>
@@ -208,7 +217,7 @@ export default function DoctorDashboard({ user }) {
               {/* Top Split Header Action Bar */}
               <div className="bg-white p-4 rounded-2xl border border-slate-200 flex justify-between items-center flex-wrap gap-2 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-700">Case ID: {selectedCase.caseId}</span>
+                  <span className="text-xs font-bold text-slate-700">{isEnglish ? 'Case ID' : 'केस आईडी'}: {selectedCase.caseId}</span>
                   <span className="text-xs text-slate-400">| {selectedCase.opdType.toUpperCase()} OPD</span>
                 </div>
 
@@ -217,7 +226,7 @@ export default function DoctorDashboard({ user }) {
                     onClick={() => setIsEditing(!isEditing)}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition-all"
                   >
-                    <Edit3 className="w-3.5 h-3.5" /> {isEditing ? 'Cancel Edit' : 'Edit Case Sheet'}
+                    <Edit3 className="w-3.5 h-3.5" /> {isEditing ? (isEnglish ? 'Cancel Edit' : 'संपादन रद्द करें') : (isEnglish ? 'Edit Case Sheet' : 'केस शीट संपादित करें')}
                   </button>
 
                   <button
@@ -225,14 +234,14 @@ export default function DoctorDashboard({ user }) {
                     disabled={saving}
                     className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition-all disabled:opacity-50"
                   >
-                    <UserCheck className="w-4 h-4" /> {selectedCase.isVerified ? 'Update Doctor Sign-Off' : 'Approve & Verify (Doctor Sign-off)'}
+                    <UserCheck className="w-4 h-4" /> {selectedCase.isVerified ? (isEnglish ? 'Update Doctor Sign-Off' : 'डॉक्टर सत्यापन अपडेट करें') : (isEnglish ? 'Approve & Verify (Doctor Sign-off)' : 'अनुमोदित करें और सत्यापित करें')}
                   </button>
 
                   <button
                     onClick={handleDownloadPDF}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-md transition-all"
                   >
-                    <Download className="w-3.5 h-3.5" /> Export Encrypted PDF
+                    <Download className="w-3.5 h-3.5" /> {isEnglish ? 'Export Encrypted PDF' : 'एन्क्रिप्टेड PDF निर्यात करें'}
                   </button>
                 </div>
               </div>
@@ -249,12 +258,12 @@ export default function DoctorDashboard({ user }) {
                 {/* Left Panel: Raw Input & PII Sanitization Status */}
                 <div className="md:col-span-5 bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                   <h4 className="text-xs font-black text-slate-700 uppercase tracking-wider border-b pb-2">
-                    Left Panel: Raw Patient Narration
+                    {isEnglish ? 'Left Panel: Raw Patient Narration' : 'बायां पैनल: रोगी का मूल विवरण'}
                   </h4>
 
                   <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
                     <span className="text-[10px] font-bold text-teal-700 uppercase block mb-1">
-                      Transcribed Speech / Text ({selectedCase.language.toUpperCase()})
+                      {isEnglish ? 'Transcribed Speech / Text' : 'ट्रांसक्राइब की गई आवाज़ / टेक्स्ट (हिन्दी)'}
                     </span>
                     <p className="text-xs text-slate-800 italic leading-relaxed">
                       "{selectedCase.rawInput}"
@@ -262,14 +271,42 @@ export default function DoctorDashboard({ user }) {
                   </div>
 
                   <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-[11px] text-emerald-900 font-medium">
-                    🛡️ <strong>PII Redaction Engine:</strong> Aadhaar numbers, phone contacts, and emails stripped prior to LLM processing.
+                    {isEnglish ? '🛡️ PII Redaction Engine: Aadhaar numbers, phone contacts, and emails stripped prior to LLM processing.' : <>🛡️ <strong>PII हटाने की प्रणाली:</strong> एलएलएम प्रोसेसिंग से पहले आधार संख्या, फोन और ईमेल हटाए गए।</>}
+                  </div>
+
+                  <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4">
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <h5 className="text-xs font-black uppercase tracking-wider text-blue-900">
+                        {isEnglish ? 'Patient Reports' : 'रोगी की रिपोर्ट'}
+                      </h5>
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-blue-700">
+                        {selectedCase.attachments?.length || 0}
+                      </span>
+                    </div>
+                    {selectedCase.attachments?.length ? (
+                      <div className="space-y-2">
+                        {selectedCase.attachments.map((attachment) => (
+                          <button
+                            type="button"
+                            key={attachment.attachmentId}
+                            onClick={() => handleDownloadAttachment(attachment)}
+                            className="flex w-full items-center justify-between gap-3 rounded-xl border border-blue-100 bg-white p-3 text-left hover:border-blue-400 transition-all"
+                          >
+                            <span className="min-w-0 truncate text-xs font-bold text-slate-700">{attachment.originalName}</span>
+                            <Download className="w-4 h-4 shrink-0 text-blue-700" />
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-blue-800">{isEnglish ? 'No reports were attached by the patient.' : 'रोगी ने कोई रिपोर्ट संलग्न नहीं की है।'}</p>
+                    )}
                   </div>
 
                   {selectedCase.isRedFlag && (
                     <div className="bg-red-50 border border-red-200 p-3 rounded-2xl text-xs font-bold text-red-800 flex items-start gap-2">
                       <ShieldAlert className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div>Emergency Red-Flag Triggered</div>
+                        <div>{isEnglish ? 'Emergency Red-Flag Triggered' : 'आपातकालीन चेतावनी सक्रिय'}</div>
                         <div className="text-[10px] text-red-600 font-normal mt-0.5">{selectedCase.redFlagReason}</div>
                       </div>
                     </div>
@@ -279,17 +316,17 @@ export default function DoctorDashboard({ user }) {
                 {/* Right Panel: AI-Structured SOAP Case Sheet / Doctor Edit Form */}
                 <div className="md:col-span-7 space-y-4">
                   <h4 className="text-xs font-black text-slate-700 uppercase tracking-wider border-b pb-2">
-                    Right Panel: AI-Structured SOAP Sheet (SOAP Note Format)
+                    {isEnglish ? 'Right Panel: AI-Structured SOAP Sheet (SOAP Note Format)' : 'दायां पैनल: एआई-निर्मित SOAP शीट (SOAP नोट प्रारूप)'}
                   </h4>
 
                   {isEditing ? (
                     <div className="bg-white p-6 rounded-3xl border border-teal-300 shadow-sm space-y-4">
                       <h5 className="font-bold text-sm text-teal-900 flex items-center gap-1.5">
-                        <Edit3 className="w-4 h-4 text-teal-600" /> Doctor Amendments & Prescriptions
+                        <Edit3 className="w-4 h-4 text-teal-600" /> {isEnglish ? 'Doctor Amendments & Prescriptions' : 'डॉक्टर संशोधन और दवाएं'}
                       </h5>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Preliminary Diagnosis</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Preliminary Diagnosis' : 'प्रारंभिक निदान'}</label>
                         <input
                           type="text"
                           value={editDiagnosis}
@@ -299,7 +336,7 @@ export default function DoctorDashboard({ user }) {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Prescribed Medications (1 per line)</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Prescribed Medications (1 per line)' : 'निर्धारित दवाएं (प्रति पंक्ति एक)'}</label>
                         <textarea
                           rows={4}
                           value={editMedications}
@@ -309,7 +346,7 @@ export default function DoctorDashboard({ user }) {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Doctor Remarks & Clinical Notes</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Doctor Remarks & Clinical Notes' : 'डॉक्टर की टिप्पणी और क्लिनिकल नोट्स'}</label>
                         <textarea
                           rows={3}
                           value={doctorNotes}
@@ -324,11 +361,11 @@ export default function DoctorDashboard({ user }) {
                         disabled={saving}
                         className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition-all"
                       >
-                        {saving ? 'Saving...' : 'Save & Digital Sign-off Case Sheet'}
+                        {saving ? (isEnglish ? 'Saving...' : 'सहेजा जा रहा है...') : (isEnglish ? 'Save & Digital Sign-off Case Sheet' : 'सहेजें और डिजिटल सत्यापन करें')}
                       </button>
                     </div>
                   ) : (
-                    <SoapCaseSheetView caseData={selectedCase} />
+                    <SoapCaseSheetView caseData={selectedCase} language={language} />
                   )}
                 </div>
               </div>

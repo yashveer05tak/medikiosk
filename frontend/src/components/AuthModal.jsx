@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Lock, Mail, User, Stethoscope, ShieldCheck, KeyRound } from 'lucide-react';
 import { loginUser, registerUser } from '../services/api.js';
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = 'hi' }) {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState('doctor'); // 'patient' or 'doctor'
   const [name, setName] = useState('');
@@ -15,6 +15,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  const isEnglish = language === 'en';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,30 +73,30 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             <X className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-2 text-teal-400 text-xs font-bold uppercase tracking-wider mb-1">
-            <ShieldCheck className="w-4 h-4" /> Secure Authentication
+            <ShieldCheck className="w-4 h-4" /> {isEnglish ? 'Secure Authentication' : 'सुरक्षित प्रमाणीकरण'}
           </div>
-          <h2 className="text-2xl font-black">{isLogin ? 'Sign In to MediKiosk' : 'Create New Account'}</h2>
-          <p className="text-xs text-slate-400 mt-1">SIH 2026 EMR Role-Based Access Control System</p>
+          <h2 className="text-2xl font-black">{isLogin ? (isEnglish ? 'Sign In to MediKiosk' : 'MediKiosk में प्रवेश करें') : (isEnglish ? 'Create New Account' : 'नया खाता बनाएं')}</h2>
+          <p className="text-xs text-slate-400 mt-1">{isEnglish ? 'SIH 2026 EMR Role-Based Access Control System' : 'SIH 2026 ईएमआर भूमिका-आधारित प्रवेश प्रणाली'}</p>
         </div>
 
         <div className="p-6">
           {/* Quick Demo Autofill Bar */}
           <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl mb-6 text-center">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">⚡ Quick SIH Judge Demo Autofill:</span>
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">{isEnglish ? '⚡ Quick SIH Judge Demo Autofill:' : '⚡ त्वरित SIH डेमो ऑटो-फिल:'}</span>
             <div className="flex gap-2 justify-center">
               <button
                 type="button"
                 onClick={() => fillQuickDemo('doctor')}
                 className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-800 text-xs font-bold rounded-lg transition-all"
               >
-                👨‍⚕️ Demo Doctor Account
+                {isEnglish ? '👨‍⚕️ Demo Doctor Account' : '👨‍⚕️ डेमो डॉक्टर खाता'}
               </button>
               <button
                 type="button"
                 onClick={() => fillQuickDemo('patient')}
                 className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 text-xs font-bold rounded-lg transition-all"
               >
-                👤 Demo Patient Account
+                {isEnglish ? '👤 Demo Patient Account' : '👤 डेमो रोगी खाता'}
               </button>
             </div>
           </div>
@@ -110,7 +112,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               <>
                 {/* Role Switcher in Signup */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Select Account Role:</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">{isEnglish ? 'Select Account Role:' : 'खाते की भूमिका चुनें:'}</label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
@@ -121,7 +123,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                           : 'border-slate-200 text-slate-600'
                       }`}
                     >
-                      <User className="w-4 h-4" /> Patient
+                      <User className="w-4 h-4" /> {isEnglish ? 'Patient' : 'रोगी'}
                     </button>
                     <button
                       type="button"
@@ -132,13 +134,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                           : 'border-slate-200 text-slate-600'
                       }`}
                     >
-                      <Stethoscope className="w-4 h-4" /> Doctor / Clinician
+                      <Stethoscope className="w-4 h-4" /> {isEnglish ? 'Doctor / Clinician' : 'डॉक्टर / चिकित्सक'}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Full Name' : 'पूरा नाम'}</label>
                   <input
                     type="text"
                     required
@@ -152,7 +154,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Email Address' : 'ईमेल पता'}</label>
               <input
                 type="email"
                 required
@@ -164,7 +166,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Password' : 'पासवर्ड'}</label>
               <input
                 type="password"
                 required
@@ -178,7 +180,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             {!isLogin && role === 'doctor' && (
               <>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Specialization</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Specialization' : 'विशेषज्ञता'}</label>
                   <input
                     type="text"
                     placeholder="e.g. General Medicine or Cardiology"
@@ -188,7 +190,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Medical Council Registration No.</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'Medical Council Registration No.' : 'मेडिकल काउंसिल पंजीकरण संख्या'}</label>
                   <input
                     type="text"
                     placeholder="e.g. MED-IN-2026-8842"
@@ -202,7 +204,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
             {!isLogin && role === 'patient' && (
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">ABHA ID (Optional)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{isEnglish ? 'ABHA ID (Optional)' : 'आभा आईडी (वैकल्पिक)'}</label>
                 <input
                   type="text"
                   placeholder="e.g. 91-8842-1029-4451"
@@ -218,7 +220,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               disabled={loading}
               className="w-full py-3.5 bg-teal-600 text-white font-bold rounded-xl text-sm hover:bg-teal-700 shadow-md transition-all active:scale-[0.98] disabled:opacity-50"
             >
-              {loading ? 'Authenticating...' : isLogin ? 'Sign In to Account' : 'Create Account & Continue'}
+              {loading ? (isEnglish ? 'Authenticating...' : 'प्रमाणीकरण हो रहा है...') : isLogin ? (isEnglish ? 'Sign In to Account' : 'खाते में प्रवेश करें') : (isEnglish ? 'Create Account & Continue' : 'खाता बनाएं और जारी रखें')}
             </button>
           </form>
 
@@ -228,7 +230,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               onClick={() => setIsLogin(!isLogin)}
               className="text-xs text-teal-700 hover:underline font-bold"
             >
-              {isLogin ? "Don't have an account? Register here" : 'Already have an account? Sign In'}
+              {isLogin ? (isEnglish ? "Don't have an account? Register here" : 'खाता नहीं है? यहां पंजीकरण करें') : (isEnglish ? 'Already have an account? Sign In' : 'पहले से खाता है? प्रवेश करें')}
             </button>
           </div>
         </div>

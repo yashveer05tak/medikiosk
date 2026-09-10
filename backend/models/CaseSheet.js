@@ -46,6 +46,15 @@ const caseSheetSchema = new mongoose.Schema({
   // Human-in-the-Loop Verification
   isVerified: { type: Boolean, default: false },
   doctorNotes: { type: String, default: '' },
+  attachments: [{
+    attachmentId: { type: String, required: true },
+    originalName: { type: String, required: true },
+    storedName: { type: String, required: true },
+    path: { type: String, required: true },
+    mimeType: { type: String, default: 'application/octet-stream' },
+    size: { type: Number, default: 0 },
+    uploadedAt: { type: Date, default: Date.now }
+  }],
   verifiedBy: {
     doctorName: { type: String, default: '' },
     registrationNumber: { type: String, default: '' },
@@ -114,6 +123,27 @@ export const CaseSheetModel = {
         await MongooseCaseSheet.findOneAndUpdate({ caseId }, updateData, { new: true });
       } catch (err) {
         console.warn('Mongo update warning:', err.message);
+      }
+    }
+    return mockDatabase.caseSheets.get(caseId);
+  },
+
+  appendAttachment: async (caseId, attachment) => {
+    const existing = mockDatabase.caseSheets.get(caseId);
+    if (existing) {
+      existing.attachments = [...(existing.attachments || []), attachment];
+      mockDatabase.caseSheets.set(caseId, existing);
+    }
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        await MongooseCaseSheet.findOneAndUpdate(
+          { caseId },
+          { $push: { attachments: attachment } },
+          { new: true }
+        );
+      } catch (err) {
+        console.warn('Mongo attachment warning:', err.message);
       }
     }
     return mockDatabase.caseSheets.get(caseId);
