@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeartPulse, ShieldCheck, UserCheck, LogOut, Languages, Stethoscope, User, Sparkles, Moon, SunMedium } from 'lucide-react';
+import { HeartPulse, ShieldCheck, UserCheck, LogOut, Languages, Sparkles, Moon, SunMedium } from 'lucide-react';
 import { getTranslation } from '../utils/translations.js';
 
 export default function HeaderBar({
@@ -7,7 +7,6 @@ export default function HeaderBar({
   role,
   language,
   darkTheme,
-  onRoleSwitch,
   onLanguageChange,
   onOpenAuth,
   onLogout,
@@ -36,30 +35,6 @@ export default function HeaderBar({
 
         {/* Action Controls & Navigation */}
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Role Switcher Toggle */}
-          <div className="bg-slate-800 p-1 rounded-xl border border-slate-700 flex items-center">
-            <button
-              onClick={() => onRoleSwitch('patient')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                role === 'patient'
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <User className="w-3.5 h-3.5" /> {language === 'en' ? 'Patient Intake' : 'रोगी पंजीकरण'}
-            </button>
-            <button
-              onClick={() => onRoleSwitch('doctor')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                role === 'doctor'
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Stethoscope className="w-3.5 h-3.5" /> {language === 'en' ? 'Doctor Portal' : 'डॉक्टर पोर्टल'}
-            </button>
-          </div>
-
           {/* Language Switcher */}
           <div className="flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-semibold text-slate-300">
             <Languages className="w-4 h-4 text-teal-400" />

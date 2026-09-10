@@ -48,7 +48,7 @@ export default function PatientLanguagePage({ language, onSelectLanguage, onCont
         onClick={onContinue}
         className="w-full mt-7 flex items-center justify-center gap-2 rounded-2xl bg-blue-700 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-700/20 hover:bg-blue-800 transition-all"
       >
-        {isEnglish ? 'Continue to Patient Portal' : 'रोगी पोर्टल पर जाएँ'} <ArrowRight className="w-5 h-5" />
+        {isEnglish ? 'Continue to Portal' : 'पोर्टल पर जाएँ'} <ArrowRight className="w-5 h-5" />
       </button>
     </section>
   );

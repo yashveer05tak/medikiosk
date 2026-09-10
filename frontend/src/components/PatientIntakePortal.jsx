@@ -103,36 +103,13 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
-      {/* Step Tracker Header */}
-      <div className="flex justify-between items-center mb-8 border-b border-slate-200 pb-4">
-        <div>
-          <span className="text-[10px] font-extrabold uppercase bg-teal-100 text-teal-800 px-3 py-1 rounded-full">
-            {isEnglish ? 'Patient Intake Portal • SIH 2026' : 'रोगी पंजीकरण पोर्टल • SIH 2026'}
-          </span>
-          <h2 className="text-2xl font-black text-slate-800 mt-1">{isEnglish ? 'AI-Assisted Patient Case-Taking' : 'एआई-सहायित रोगी केस-पंजीकरण'}</h2>
-        </div>
-
-        <div className="flex gap-2">
-          {(isEnglish ? ['Demographics', 'Voice/Text Intake', 'AI Interview', 'SOAP Case Sheet'] : ['रोगी विवरण', 'आवाज़/टेक्स्ट पंजीकरण', 'एआई साक्षात्कार', 'SOAP केस शीट']).map((s, idx) => (
-            <span
-              key={idx}
-              className={`text-xs font-bold px-3 py-1.5 rounded-xl ${
-                step === idx
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-400'
-              }`}
-            >
-              {idx + 1}. {s}
-            </span>
-          ))}
-        </div>
-      </div>
+    <div className="intake-flow max-w-4xl mx-auto px-4 py-4 sm:py-8">
 
       {/* STEP 0: Demographics & Identity */}
       {step === 0 && (
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-slate-800 border-b pb-3">{t.opdTitle || 'Step 1: Patient Registration & OPD Department'}</h3>
+        <div className="intake-stage bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <div className="intake-stage-label">{isEnglish ? 'Step 1 of 4' : 'चरण 1 / 4'}</div>
+          <h3 className="text-2xl font-black text-slate-800 border-b pb-3">{t.opdTitle || 'Step 1: Patient Registration & OPD Department'}</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -225,9 +202,12 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
 
       {/* STEP 1: Multilingual Voice/Text Narration */}
       {step === 1 && (
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div className="intake-stage bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-slate-800">चरण 2: लक्षण बताएं (आवाज़ या टेक्स्ट)</h3>
+            <div>
+              <div className="intake-stage-label">{isEnglish ? 'Step 2 of 4' : 'चरण 2 / 4'}</div>
+              <h3 className="text-2xl font-black text-slate-800 mt-1">{isEnglish ? 'Describe Symptoms (Voice or Text)' : 'लक्षण बताएं (आवाज़ या टेक्स्ट)'}</h3>
+            </div>
             <span className="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-lg font-bold">
               {isEnglish ? 'Language: English' : 'भाषा: हिन्दी'}
             </span>
@@ -309,8 +289,9 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
 
       {/* STEP 2: AI Interview Questions */}
       {step === 2 && (
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-slate-800">{isEnglish ? 'AI Clinical Interview' : 'एआई क्लिनिकल साक्षात्कार'}</h3>
+        <div className="intake-stage bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <div className="intake-stage-label">{isEnglish ? 'Step 3 of 4' : 'चरण 3 / 4'}</div>
+          <h3 className="text-2xl font-black text-slate-800">{isEnglish ? 'AI Clinical Interview' : 'एआई क्लिनिकल साक्षात्कार'}</h3>
           <p className="text-sm text-slate-500">{isEnglish ? 'Questions adapt to the reported complaint to capture the most relevant clinical context.' : 'सबसे उपयोगी क्लिनिकल जानकारी लेने के लिए प्रश्न आपकी शिकायत के अनुसार बदलते हैं।'}</p>
 
           <DynamicClinicalQuestions
@@ -340,7 +321,7 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
 
       {/* STEP 3: Rendered Case Sheet View */}
       {step === 3 && structuredResult && (
-        <div className="space-y-6">
+        <div className="intake-stage space-y-6">
           <div className="bg-teal-50 border border-teal-200 p-4 rounded-2xl flex items-center justify-between">
             <div className="flex items-center gap-3 text-teal-900 font-bold text-sm">
               <Sparkles className="w-5 h-5 text-teal-600" />

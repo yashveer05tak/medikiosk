@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HeaderBar from './components/HeaderBar.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import PatientLanguagePage from './components/PatientLanguagePage.jsx';
+import PortalChoicePage from './components/PortalChoicePage.jsx';
 import PatientPortalPage from './components/PatientPortalPage.jsx';
 import DoctorPortalPage from './components/DoctorPortalPage.jsx';
 import TriageAlert from './components/TriageAlert.jsx';
@@ -9,11 +10,12 @@ import { getCurrentUser, structureCaseSheet } from './services/api.js';
 
 export default function App() {
   const [role, setRole] = useState('patient'); // 'patient' or 'doctor'
-  const [view, setView] = useState('language'); // 'language', 'patient', 'doctor'
+  const [view, setView] = useState('language'); // 'language', 'portal-choice', 'patient', 'doctor'
   const [language, setLanguage] = useState('hi');
   const [darkTheme, setDarkTheme] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authRole, setAuthRole] = useState('patient');
 
   const [triageAlertOpen, setTriageAlertOpen] = useState(false);
   const [triageReason, setTriageReason] = useState('');
@@ -37,27 +39,15 @@ export default function App() {
     fetchMe();
   }, []);
 
-  const handleRoleSwitch = (newRole) => {
-    if (newRole === 'doctor' && user?.role !== 'doctor' && user?.role !== 'admin') {
-      setIsAuthOpen(true);
-      return;
-    }
-    setRole(newRole);
-    if (newRole === 'doctor') {
-      setView('doctor');
-    } else {
-      setView('language');
-    }
-  };
-
   const handleAuthSuccess = (loggedUser) => {
     setUser(loggedUser);
+    setIsAuthOpen(false);
     if (loggedUser.role === 'doctor') {
       setRole('doctor');
       setView('doctor');
     } else {
       setRole('patient');
-      setView('language');
+      setView('patient');
     }
   };
 
@@ -86,14 +76,13 @@ export default function App() {
         role={role}
         language={language}
         darkTheme={darkTheme}
-        onRoleSwitch={handleRoleSwitch}
         onLanguageChange={(lang) => setLanguage(lang)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogout={handleLogout}
         onToggleTheme={() => setDarkTheme((prev) => !prev)}
       />
 
-      {view !== 'language' && (
+      {view !== 'language' && view !== 'portal-choice' && view !== 'auth' && (
         <div className="app-nav bg-white/80 border-b border-slate-200 px-4 sm:px-6 py-3 shadow-sm">
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 flex-wrap">
             <span className="app-mode text-[11px] font-black uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
@@ -114,7 +103,15 @@ export default function App() {
           <PatientLanguagePage
             language={language}
             onSelectLanguage={setLanguage}
-            onContinue={() => setView('patient')}
+            onContinue={() => setView('portal-choice')}
+          />
+        )}
+
+        {view === 'portal-choice' && (
+          <PortalChoicePage
+            language={language}
+            onPatient={() => { setRole('patient'); setAuthRole('patient'); setView('auth'); setIsAuthOpen(true); }}
+            onDoctor={() => { setRole('doctor'); setAuthRole('doctor'); setView('auth'); setIsAuthOpen(true); }}
           />
         )}
 
@@ -128,14 +125,23 @@ export default function App() {
         )}
 
         {view === 'doctor' && <DoctorPortalPage user={user} language={language} />}
+
+        {view === 'auth' && (
+          <div className="portal-page flex min-h-[60vh] items-center justify-center px-4 py-10">
+            <div className="text-center text-sm text-slate-500">
+              {language === 'en' ? 'Secure sign-in is opening...' : 'सुरक्षित प्रवेश खुल रहा है...'}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Authentication Modal */}
       <AuthModal
         isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
+        onClose={() => { setIsAuthOpen(false); setView('portal-choice'); }}
         onAuthSuccess={handleAuthSuccess}
         language={language}
+        portalRole={authRole}
       />
 
       {/* Emergency Red Flag Overlay */}

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Lock, Mail, User, Stethoscope, ShieldCheck, KeyRound } from 'lucide-react';
 import { loginUser, registerUser } from '../services/api.js';
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = 'hi' }) {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = 'hi', portalRole = 'patient' }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [role, setRole] = useState('doctor'); // 'patient' or 'doctor'
+  const [role, setRole] = useState(portalRole); // 'patient' or 'doctor'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,9 +14,21 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  if (!isOpen) return null;
-
   const isEnglish = language === 'en';
+
+  useEffect(() => {
+    if (isOpen) {
+      setRole(portalRole);
+      setIsLogin(true);
+      setError(null);
+      setEmail('');
+      setPassword('');
+    }
+  }, [isOpen, portalRole]);
+
+  const isDoctorPortal = portalRole === 'doctor';
+
+  if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +39,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
       if (isLogin) {
         const res = await loginUser({ email, password });
         onAuthSuccess(res.user);
-        onClose();
       } else {
         const res = await registerUser({
           name,
@@ -39,7 +50,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
           registrationNumber
         });
         onAuthSuccess(res.user);
-        onClose();
       }
     } catch (err) {
       setError(err.response?.data?.error || err.message || 'Authentication failed');
@@ -75,28 +85,23 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
           <div className="flex items-center gap-2 text-teal-400 text-xs font-bold uppercase tracking-wider mb-1">
             <ShieldCheck className="w-4 h-4" /> {isEnglish ? 'Secure Authentication' : 'सुरक्षित प्रमाणीकरण'}
           </div>
-          <h2 className="text-2xl font-black">{isLogin ? (isEnglish ? 'Sign In to MediKiosk' : 'MediKiosk में प्रवेश करें') : (isEnglish ? 'Create New Account' : 'नया खाता बनाएं')}</h2>
-          <p className="text-xs text-slate-400 mt-1">{isEnglish ? 'SIH 2026 EMR Role-Based Access Control System' : 'SIH 2026 ईएमआर भूमिका-आधारित प्रवेश प्रणाली'}</p>
+          <h2 className="text-2xl font-black">{isLogin ? (isEnglish ? `Sign In to ${isDoctorPortal ? 'Doctor' : 'Patient'} Portal` : `${isDoctorPortal ? 'डॉक्टर' : 'रोगी'} पोर्टल में प्रवेश करें`) : (isEnglish ? 'Create New Account' : 'नया खाता बनाएं')}</h2>
+          <p className="text-xs text-slate-400 mt-1">{isEnglish ? 'Use the demo account below or enter your credentials.' : 'नीचे दिए गए डेमो खाते का उपयोग करें या अपनी जानकारी दर्ज करें।'}</p>
         </div>
 
         <div className="p-6">
           {/* Quick Demo Autofill Bar */}
           <div className="bg-slate-50 border border-slate-200 p-3 rounded-2xl mb-6 text-center">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">{isEnglish ? '⚡ Quick SIH Judge Demo Autofill:' : '⚡ त्वरित SIH डेमो ऑटो-फिल:'}</span>
-            <div className="flex gap-2 justify-center">
+            <div className="flex justify-center">
               <button
                 type="button"
-                onClick={() => fillQuickDemo('doctor')}
+                onClick={() => fillQuickDemo(isDoctorPortal ? 'doctor' : 'patient')}
                 className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-800 text-xs font-bold rounded-lg transition-all"
               >
-                {isEnglish ? '👨‍⚕️ Demo Doctor Account' : '👨‍⚕️ डेमो डॉक्टर खाता'}
-              </button>
-              <button
-                type="button"
-                onClick={() => fillQuickDemo('patient')}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 text-xs font-bold rounded-lg transition-all"
-              >
-                {isEnglish ? '👤 Demo Patient Account' : '👤 डेमो रोगी खाता'}
+                {isDoctorPortal
+                  ? (isEnglish ? '👨‍⚕️ Use Demo Doctor Account' : '👨‍⚕️ डेमो डॉक्टर खाते का उपयोग करें')
+                  : (isEnglish ? '👤 Use Demo Patient Account' : '👤 डेमो रोगी खाते का उपयोग करें')}
               </button>
             </div>
           </div>
