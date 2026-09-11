@@ -142,11 +142,19 @@ export default function SoapCaseSheetView({ caseData, editable = false, onChange
                 ))}
               </ul>
             </div>
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+              <span className="font-bold text-amber-900 block">{isEnglish ? 'Precautionary measures before review:' : 'डॉक्टर की समीक्षा से पहले सावधानियां:'}</span>
+              <ul className="list-disc ml-4 text-amber-900 mt-1 space-y-0.5">
+                {(pla.precautionaryMeasures || ['Monitor symptoms and avoid strenuous activity if it worsens symptoms.', 'Seek urgent care for severe or rapidly worsening symptoms.']).map((advice, i) => (
+                  <li key={i}>{advice}</li>
+                ))}
+              </ul>
+            </div>
             <div>
-              <span className="font-bold text-slate-500 block">{isEnglish ? 'Prescribed Medications:' : 'निर्धारित दवाएं:'}</span>
-              <div className="bg-white p-3 rounded-xl border border-slate-200 mt-1 font-mono text-teal-800 font-bold">
+              <span className="font-bold text-slate-500 block">{isEnglish ? 'Medication safety:' : 'दवा सुरक्षा:'}</span>
+              <div className="bg-white p-3 rounded-xl border border-slate-200 mt-1 text-slate-700 font-semibold">
                 {(pla.medications || []).map((med, i) => (
-                  <div key={i}>💊 {med}</div>
+                  <div key={i}>{med}</div>
                 ))}
               </div>
             </div>

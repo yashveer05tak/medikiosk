@@ -10,7 +10,7 @@ export const structureClinicalCase = async (rawInput, language = 'en', clinicalA
   if (apiKey) {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' });
       const prompt = `
 SYSTEM ROLE: You are a cautious modern clinical documentation assistant for MediKiosk.
 TASK: Convert the patient's complaint and adaptive interview answers into strict JSON SOAP format. Identify urgent red flags, use modern clinical terminology, and never claim a confirmed diagnosis. Recommend clinician review and appropriate diagnostic tests. Do not use Ayurvedic, AYUSH, dosha, prakriti, agni, koshtha, or traditional medicine terminology.
@@ -51,7 +51,7 @@ RETURN JSON ONLY:
 }`;
       const result = await model.generateContent(prompt);
       const cleanJsonStr = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
-      return JSON.parse(cleanJsonStr);
+      return enforcePatientSafety(JSON.parse(cleanJsonStr));
     } catch (err) {
       console.warn('LLM call failed; using modern clinical fallback:', err.message);
     }
@@ -59,6 +59,82 @@ RETURN JSON ONLY:
 
   return generateModernClinicalFallback(rawInput, language, clinicalAnswers);
 };
+
+function enforcePatientSafety(structuredCase) {
+  const safeCase = structuredCase && typeof structuredCase === 'object' ? structuredCase : {};
+  safeCase.plan = safeCase.plan && typeof safeCase.plan === 'object' ? safeCase.plan : {};
+  safeCase.plan.precautionaryMeasures = Array.isArray(safeCase.plan.precautionaryMeasures) && safeCase.plan.precautionaryMeasures.length
+    ? safeCase.plan.precautionaryMeasures.slice(0, 6)
+    : ['Monitor symptoms and record changes', 'Hydrate as tolerated if you can keep fluids down', 'Seek urgent care for severe or rapidly worsening symptoms'];
+  safeCase.plan.medications = ['Do not self-start tablets. Medication choice and dose require clinician review, especially with allergies, pregnancy, age, or other medicines.'];
+  return safeCase;
+}
+
+export const generateClinicalQuestions = async (rawInput, language = 'en', patientMeta = {}) => {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+
+  if (apiKey) {
+    try {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' });
+      const prompt = `
+SYSTEM ROLE: You are a cautious clinical intake assistant. Generate questions for a patient before a clinician visit.
+RULES: Ask only history and safety questions. Do not diagnose, prescribe, recommend a drug, or request unnecessary personal identifiers. Include red-flag questions when relevant. Return exactly 3 to 5 useful questions. Keep language simple and use the requested language where possible.
+PATIENT COMPLAINT (${language.toUpperCase()}): ${rawInput}
+PATIENT CONTEXT: ${JSON.stringify(patientMeta)}
+
+RETURN JSON ONLY:
+{"questions":[{"id":"shortStableId","label":"Patient-friendly question","options":["No","Yes","Not sure"]}]}`;
+      const result = await model.generateContent(prompt);
+      const parsed = JSON.parse(result.response.text().replace(/```json/g, '').replace(/```/g, '').trim());
+      const questions = normalizeClinicalQuestions(parsed.questions);
+      if (questions.length >= 3) return questions;
+    } catch (err) {
+      console.warn('AI question generation failed; using local clinical fallback:', err.message);
+    }
+  }
+
+  return generateQuestionFallback(rawInput);
+};
+
+function normalizeClinicalQuestions(questions) {
+  if (!Array.isArray(questions)) return [];
+  return questions
+    .filter((question) => question && typeof question.label === 'string' && Array.isArray(question.options))
+    .slice(0, 5)
+    .map((question, index) => ({
+      id: String(question.id || `clinicalQuestion${index + 1}`).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || `clinicalQuestion${index + 1}`,
+      label: question.label.trim().slice(0, 240),
+      options: question.options.filter(option => typeof option === 'string').slice(0, 5).map(option => option.trim()).filter(Boolean)
+    }))
+    .filter(question => question.options.length >= 2);
+}
+
+function generateQuestionFallback(rawInput = '') {
+  const text = rawInput.toLowerCase();
+  if (/chest|heart|pressure|palpitation|सीने|நெஞ்சு/.test(text)) {
+    return [
+      { id: 'radiation', label: 'Does the discomfort spread to your arm, jaw, back, or shoulder?', options: ['No', 'Yes', 'Not sure'] },
+      { id: 'breathlessness', label: 'Are you short of breath, sweaty, dizzy, or faint?', options: ['No', 'Yes', 'Some of these symptoms'] },
+      { id: 'exertion', label: 'Did it begin or worsen with activity?', options: ['No', 'Yes', 'Not sure'] },
+      { id: 'onset', label: 'Did it start suddenly?', options: ['No', 'Yes', 'Not sure'] }
+    ];
+  }
+  if (/breath|cough|wheeze|asthma|lung|फेफ|சுவாச/.test(text)) {
+    return [
+      { id: 'onset', label: 'Did the breathing problem start suddenly?', options: ['No', 'Yes', 'Not sure'] },
+      { id: 'fever', label: 'Do you have fever, chills, or cough with phlegm?', options: ['No', 'Yes', 'Some of these symptoms'] },
+      { id: 'activity', label: 'Is it worse at rest or during activity?', options: ['At rest', 'During activity', 'Not sure'] },
+      { id: 'cyanosis', label: 'Do your lips or face look blue, or are you unable to speak full sentences?', options: ['No', 'Yes', 'Not sure'] }
+    ];
+  }
+  return [
+    { id: 'onset', label: 'When did this problem begin?', options: ['Today', 'This week', 'More than a week ago', 'Not sure'] },
+    { id: 'impact', label: 'How much is this affecting your normal activities?', options: ['Minimal', 'Moderate', 'Severe'] },
+    { id: 'redFlags', label: 'Do you have fainting, severe weakness, confusion, or rapidly worsening symptoms?', options: ['No', 'Yes', 'Not sure'] },
+    { id: 'medicines', label: 'Have you taken any medicine for this problem already?', options: ['No', 'Yes', 'Not sure'] }
+  ];
+}
 
 function generateModernClinicalFallback(rawInput = '', language = 'en', clinicalAnswers = {}) {
   const text = rawInput.toLowerCase();
@@ -143,7 +219,8 @@ function generateModernClinicalFallback(rawInput = '', language = 'en', clinical
     plan: {
       recommendedTests,
       dietLifestyleAdvice: ['Hydrate as tolerated', 'Record symptom progression and triggers', 'Do not delay urgent care for severe or worsening symptoms'],
-      medications: ['Medication decisions require clinician review'],
+      precautionaryMeasures: ['Rest and monitor symptoms', 'Hydrate as tolerated if you can keep fluids down', 'Seek urgent care for severe or rapidly worsening symptoms'],
+      medications: ['Do not self-start tablets. Medication choice and dose require clinician review, especially with allergies, pregnancy, age, or other medicines.'],
       followUp
     }
   };

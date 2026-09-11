@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { structureCase, getAllCases, getCaseById, verifyCase, exportCasePDF, uploadCaseAttachment, downloadCaseAttachment } from '../controllers/caseController.js';
+import { structureCase, getClinicalQuestions, getAllCases, getCaseById, verifyCase, exportCasePDF, uploadCaseAttachment, downloadCaseAttachment } from '../controllers/caseController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 import { piiSanitizerMiddleware } from '../middleware/piiSanitizer.js';
 
@@ -9,6 +9,7 @@ const attachmentUpload = multer({ dest: 'uploads/case-documents/' });
 
 // Public / Protected Intake Structuring
 router.post('/structure', protect, piiSanitizerMiddleware, structureCase);
+router.post('/questions', protect, getClinicalQuestions);
 
 // Doctor & Admin Access Endpoints
 router.get('/all', protect, getAllCases);

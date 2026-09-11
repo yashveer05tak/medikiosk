@@ -65,13 +65,13 @@ const GENERAL_QUESTIONS = [
   { id: 'redFlags', label: 'Do you have fainting, severe weakness, confusion, or rapidly worsening symptoms?', options: ['No', 'Yes', 'Not sure'] }
 ];
 
-export default function DynamicClinicalQuestions({ complaint, answers, onChange }) {
+export default function DynamicClinicalQuestions({ complaint, answers, onChange, questions: apiQuestions, isAiGenerated }) {
   const group = useMemo(() => {
     const normalized = complaint.toLowerCase();
     return QUESTION_GROUPS.find((candidate) => candidate.keywords.some((keyword) => normalized.includes(keyword))) || null;
   }, [complaint]);
 
-  const questions = group ? [...group.questions, GENERAL_QUESTIONS[1], GENERAL_QUESTIONS[2]] : GENERAL_QUESTIONS;
+  const questions = apiQuestions?.length ? apiQuestions : (group ? [...group.questions, GENERAL_QUESTIONS[1], GENERAL_QUESTIONS[2]] : GENERAL_QUESTIONS);
   const Icon = group?.icon || Stethoscope;
 
   const updateAnswer = (id, value) => {
@@ -84,7 +84,7 @@ export default function DynamicClinicalQuestions({ complaint, answers, onChange 
         <div className="bg-teal-100 text-teal-700 p-2.5 rounded-xl"><Icon className="w-5 h-5" /></div>
         <div>
           <p className="text-sm font-bold text-slate-800">{group?.title || 'General clinical follow-up'}</p>
-          <p className="text-xs text-slate-500">Questions update as your symptom description changes.</p>
+          <p className="text-xs text-slate-500">{isAiGenerated ? 'Questions were generated from your symptom description for clinician intake.' : 'Questions update as your symptom description changes.'}</p>
         </div>
       </div>
 

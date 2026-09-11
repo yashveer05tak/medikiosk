@@ -46,6 +46,11 @@ export const structureCaseSheet = async (payload) => {
   return response.data;
 };
 
+export const getClinicalQuestions = async (payload) => {
+  const response = await api.post('/case/questions', payload);
+  return response.data;
+};
+
 export const getAllCases = async () => {
   const response = await api.get('/case/all');
   return response.data;

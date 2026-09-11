@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { CaseSheetModel } from '../models/CaseSheet.js';
-import { structureClinicalCase } from '../services/aiService.js';
+import { generateClinicalQuestions, structureClinicalCase } from '../services/aiService.js';
 import { checkTriage } from '../utils/triage.js';
 import { buildCaseSheetPDF } from '../utils/pdfGenerator.js';
 import { sanitizeText } from '../middleware/piiSanitizer.js';
@@ -19,7 +19,7 @@ export const structureCase = async (req, res) => {
     const sanitizedInput = sanitizeText(inputText);
 
     // 2. Check Emergency Red Flags
-    const triageCheck = checkTriage(sanitizedInput, []);
+    const triageCheck = checkTriage(sanitizedInput, Object.values(clinicalAnswers || {}));
 
     // 3. Invoke AI Structuring Engine (Gemini / OpenAI / Clinical NLP Parser)
     const structuredSoap = await structureClinicalCase(sanitizedInput, language || 'en', clinicalAnswers || {}, {
@@ -61,6 +61,24 @@ export const structureCase = async (req, res) => {
     });
   } catch (error) {
     console.error('Error structuring case:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// POST /api/case/questions
+export const getClinicalQuestions = async (req, res) => {
+  try {
+    const { complaint, rawText, language, age, gender } = req.body;
+    const inputText = rawText || complaint || '';
+
+    if (!inputText.trim()) {
+      return res.status(400).json({ error: 'A symptom description is required to generate questions.' });
+    }
+
+    const questions = await generateClinicalQuestions(sanitizeText(inputText), language || 'en', { age, gender });
+    res.json({ questions, source: process.env.GEMINI_API_KEY ? 'ai' : 'fallback' });
+  } catch (error) {
+    console.error('Error generating clinical questions:', error);
     res.status(500).json({ error: error.message });
   }
 };

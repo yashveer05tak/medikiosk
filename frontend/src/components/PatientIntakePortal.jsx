@@ -4,6 +4,7 @@ import { useVoiceRecognition } from '../utils/useVoiceRecognition.js';
 import { getTranslation } from '../utils/translations.js';
 import DynamicClinicalQuestions from './DynamicClinicalQuestions.jsx';
 import SoapCaseSheetView from './SoapCaseSheetView.jsx';
+import { getClinicalQuestions } from '../services/api.js';
 
 export default function PatientIntakePortal({ language, onStructureComplete, onRedFlagDetected }) {
   const t = getTranslation(language);
@@ -19,6 +20,8 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
   const [chiefComplaint, setChiefComplaint] = useState('');
   const [formError, setFormError] = useState('');
   const [clinicalAnswers, setClinicalAnswers] = useState({});
+  const [aiQuestions, setAiQuestions] = useState(null);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [structuredResult, setStructuredResult] = useState(null);
@@ -99,6 +102,25 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
       alert('Failed to process case sheet.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOpenInterview = async () => {
+    if (!chiefComplaint.trim()) {
+      alert('Kripya apne symptoms voice ya text se batayein pehle.');
+      return;
+    }
+
+    setQuestionsLoading(true);
+    try {
+      const result = await getClinicalQuestions({ complaint: chiefComplaint, language, age, gender });
+      setAiQuestions(result.questions || null);
+    } catch (error) {
+      console.warn('Using local clinical questions:', error.message);
+      setAiQuestions(null);
+    } finally {
+      setQuestionsLoading(false);
+      setStep(2);
     }
   };
 
@@ -272,16 +294,11 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
               {isEnglish ? 'Back' : 'पीछे जाएँ'}
             </button>
             <button
-              onClick={() => {
-                if (opdType === 'general' || opdType === 'allopathic') {
-                  setStep(2);
-                } else {
-                  handleSubmitStructuring();
-                }
-              }}
+              onClick={handleOpenInterview}
+              disabled={questionsLoading}
               className="flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md"
             >
-              {t.next || (isEnglish ? 'Next: AI Interview' : 'आगे: एआई साक्षात्कार')} <ArrowRight className="w-4 h-4" />
+              {questionsLoading ? (isEnglish ? 'Preparing questions...' : 'प्रश्न तैयार हो रहे हैं...') : (t.next || (isEnglish ? 'Next: AI Interview' : 'आगे: एआई साक्षात्कार'))} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -298,6 +315,8 @@ export default function PatientIntakePortal({ language, onStructureComplete, onR
             complaint={chiefComplaint}
             answers={clinicalAnswers}
             onChange={setClinicalAnswers}
+            questions={aiQuestions}
+            isAiGenerated={Boolean(aiQuestions)}
           />
 
           <div className="flex justify-between pt-4">

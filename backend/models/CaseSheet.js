@@ -39,6 +39,7 @@ const caseSheetSchema = new mongoose.Schema({
     plan: {
       recommendedTests: [{ type: String }],
       dietLifestyleAdvice: [{ type: String }],
+      precautionaryMeasures: [{ type: String }],
       medications: [{ type: String }]
     }
   },
