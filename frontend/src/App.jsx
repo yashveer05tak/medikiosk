@@ -52,7 +52,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('medikiosk_token');
+    localStorage.removeItem('viora_token');
     setUser(null);
     setRole('patient');
     setView('language');
@@ -154,7 +154,7 @@ export default function App() {
 
       {/* SIH 2026 Kiosk Footer */}
       <footer className="bg-slate-900 border-t border-slate-800 text-white px-6 py-4 text-center text-xs text-slate-400">
-        {language === 'en' ? 'MediKiosk • Smart India Hackathon (SIH 2026) Problem Statement 26047' : 'MediKiosk • स्मार्ट इंडिया हैकाथॉन (SIH 2026) समस्या विवरण 26047'}
+        {language === 'en' ? 'Viora • Smart India Hackathon (SIH 2026) Problem Statement 26047' : 'Viora • स्मार्ट इंडिया हैकाथॉन (SIH 2026) समस्या विवरण 26047'}
       </footer>
     </div>
   );

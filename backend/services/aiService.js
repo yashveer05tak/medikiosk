@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
- * Modern clinical AI service for MediKiosk.
+ * Modern clinical AI service for Viora.
  * The model receives the initial complaint and adaptive interview answers.
  */
 export const structureClinicalCase = async (rawInput, language = 'en', clinicalAnswers = {}, patientMeta = {}) => {
@@ -12,7 +12,7 @@ export const structureClinicalCase = async (rawInput, language = 'en', clinicalA
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.6-flash' });
       const prompt = `
-SYSTEM ROLE: You are a cautious modern clinical documentation assistant for MediKiosk.
+SYSTEM ROLE: You are a cautious modern clinical documentation assistant for Viora.
 TASK: Convert the patient's complaint and adaptive interview answers into strict JSON SOAP format. Identify urgent red flags, use modern clinical terminology, and never claim a confirmed diagnosis. Recommend clinician review and appropriate diagnostic tests. Do not use Ayurvedic, AYUSH, dosha, prakriti, agni, koshtha, or traditional medicine terminology.
 
 PATIENT COMPLAINT (${language.toUpperCase()}): ${rawInput}

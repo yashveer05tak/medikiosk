@@ -1,7 +1,7 @@
 {
-  "name": "medikiosk-backend",
+  "name": "viora-backend",
   "version": "2.0.0",
-  "description": "MediKiosk - AI-Assisted Multilingual Patient Case-Taking Backend API (SIH 2026)",
+  "description": "Viora - AI-Assisted Multilingual Patient Case-Taking Backend API (SIH 2026)",
   "main": "server.js",
   "type": "module",
   "scripts": {

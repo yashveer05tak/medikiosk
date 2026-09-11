@@ -4,7 +4,7 @@ import { structureClinicalCase } from '../backend/services/aiService.js';
 import { CaseSheetModel } from '../backend/models/CaseSheet.js';
 import { checkTriage } from '../backend/utils/triage.js';
 
-console.log('Starting MediKiosk SIH 2026 Verification Test Suite...');
+console.log('Starting Viora SIH 2026 Verification Test Suite...');
 
 try {
   const rawPiiText = 'My phone is 9876543210 and Aadhaar is 1234 5678 9012. I have chest pain.';
@@ -47,7 +47,7 @@ try {
   });
   assert.strictEqual(updatedCase.isVerified, true, 'Doctor sign-off MUST update status to isVerified: true');
   console.log('Passed: Doctor Verification Sign-off Test');
-  console.log('ALL MediKiosk TESTS PASSED SUCCESSFULLY!');
+  console.log('ALL Viora TESTS PASSED SUCCESSFULLY!');
 } catch (err) {
   console.error('Test failed:', err);
   process.exit(1);

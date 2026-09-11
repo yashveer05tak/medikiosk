@@ -23,7 +23,7 @@ app.get('/api/health', (req, res) => {
   const mysqlStatus = checkMySQLStatus();
   res.json({
     status: 'healthy',
-    project: 'MediKiosk - AI-Assisted Multilingual Patient Case-Taking Software',
+    project: 'Viora - AI-Assisted Multilingual Patient Case-Taking Software',
     sihProblemId: '26047',
     timestamp: new Date().toISOString(),
     databases: {
@@ -49,7 +49,7 @@ const startServer = async () => {
   await connectMySQL();
   app.listen(PORT, () => {
     console.log(`=======================================================`);
-    console.log(`🚀 MediKiosk SIH 2026 Server running on port ${PORT}`);
+    console.log(`🚀 Viora SIH 2026 Server running on port ${PORT}`);
     console.log(`🏥 Problem Statement: 26047`);
     console.log(`🩺 Health Check: http://localhost:${PORT}/api/health`);
     console.log(`=======================================================`);

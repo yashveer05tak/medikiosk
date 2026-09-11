@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'medikiosk_sih2026_binary_brains_secret_key_8842';
+const JWT_SECRET = process.env.JWT_SECRET || 'viora_sih2026_binary_brains_secret_key_8842';
 
 /**
  * Protect routes: Validates JWT token from Bearer header

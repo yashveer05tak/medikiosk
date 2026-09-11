@@ -24,7 +24,7 @@ export default function HeaderBar({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-extrabold text-xl tracking-tight text-white">MediKiosk</h1>
+              <h1 className="font-extrabold text-xl tracking-tight text-white">Viora</h1>
               <span className="bg-teal-500/20 text-teal-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-teal-500/30 flex items-center gap-1">
                 <Sparkles className="w-3 h-3" /> SIH 2026 (PS 26047)
               </span>

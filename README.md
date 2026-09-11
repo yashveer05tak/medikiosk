@@ -1,10 +1,10 @@
-# MediKiosk
+# Viora
 
 AI-assisted multilingual clinical intake platform with adaptive interview questions for real patient problems.
 
 ## Overview
 
-MediKiosk is a clinician-in-the-loop patient intake system built for modern outpatient workflows. It captures voice or text symptoms, asks adaptive follow-up questions based on the reported complaint, redacts sensitive patient data, and converts the interaction into a structured SOAP case sheet for doctor review.
+Viora is a clinician-in-the-loop patient intake system built for modern outpatient workflows. It captures voice or text symptoms, asks adaptive follow-up questions based on the reported complaint, redacts sensitive patient data, and converts the interaction into a structured SOAP case sheet for doctor review.
 
 **Developed by:** [Yashveer Tak](https://github.com/yashveer05tak)  
 **Project:** Smart India Hackathon 2026, Problem Statement 26047
@@ -45,8 +45,8 @@ MediKiosk is a clinician-in-the-loop patient intake system built for modern outp
 ### 1. Clone the project
 
 ```bash
-git clone https://github.com/yashveer05tak/medikiosk.git
-cd medikiosk
+git clone https://github.com/yashveer05tak/viora.git
+cd viora
 ```
 
 ### 2. Configure the backend
@@ -57,11 +57,11 @@ Create a `backend/.env` file:
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=replace-with-a-long-random-secret
-MONGO_URI=mongodb://localhost:27017/medikiosk_db
+MONGO_URI=mongodb://localhost:27017/viora_db
 MYSQL_HOST=localhost
 MYSQL_USER=root
 MYSQL_PASSWORD=
-MYSQL_DATABASE=medikiosk_db
+MYSQL_DATABASE=viora_db
 GEMINI_API_KEY=
 ```
 
@@ -107,15 +107,15 @@ The production bundle is generated in `frontend/dist`.
 
 ## Demo accounts
 
-- Doctor: `doctor@medikiosk.org` / `doctor123`
-- Patient: `patient@medikiosk.org` / `patient123`
+- Doctor: `doctor@viora.org` / `doctor123`
+- Patient: `patient@viora.org` / `patient123`
 
 ## Testing
 
 From the project root:
 
 ```bash
-node tests/test_medikiosk.js
+node tests/test_viora.js
 ```
 
 This suite covers:
@@ -141,7 +141,7 @@ This suite covers:
 
 ## Privacy and safety
 
-MediKiosk is a prototype and does not replace professional medical judgment. Always keep production secrets out of source control, use HTTPS in deployment, and review generated clinical content before using it in patient care.
+Viora is a prototype and does not replace professional medical judgment. Always keep production secrets out of source control, use HTTPS in deployment, and review generated clinical content before using it in patient care.
 
 ## License
 

@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Attach JWT Token from localStorage to every request automatically
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('medikiosk_token');
+  const token = localStorage.getItem('viora_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -22,7 +22,7 @@ api.interceptors.request.use((config) => {
 export const registerUser = async (userData) => {
   const response = await api.post('/auth/register', userData);
   if (response.data.token) {
-    localStorage.setItem('medikiosk_token', response.data.token);
+    localStorage.setItem('viora_token', response.data.token);
   }
   return response.data;
 };
@@ -30,7 +30,7 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   const response = await api.post('/auth/login', credentials);
   if (response.data.token) {
-    localStorage.setItem('medikiosk_token', response.data.token);
+    localStorage.setItem('viora_token', response.data.token);
   }
   return response.data;
 };

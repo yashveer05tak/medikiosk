@@ -12,7 +12,7 @@ export const mockDatabase = {
 };
 
 export const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/medikiosk_db';
+  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/viora_db';
   try {
     mongoose.set('strictQuery', false);
     await mongoose.connect(uri, {
@@ -31,6 +31,6 @@ export const checkDbStatus = () => {
   return {
     connected: !isUsingMockDB && mongoose.connection.readyState === 1,
     usingMock: isUsingMockDB,
-    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/medikiosk_db'
+    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/viora_db'
   };
 };

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { checkTriage } from '../backend/utils/triage.js';
 import { exportToFHIR } from '../backend/utils/fhirExporter.js';
 
-console.log('🧪 Starting MediKiosk AI Clinical Triage & FHIR Tests...');
+console.log('🧪 Starting Viora AI Clinical Triage & FHIR Tests...');
 
 try {
   // Test Case 1: Routine Pain (Knee osteoarthritis simulation)

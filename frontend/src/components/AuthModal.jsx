@@ -61,11 +61,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
   const fillQuickDemo = (demoType) => {
     if (demoType === 'doctor') {
       setIsLogin(true);
-      setEmail('doctor@medikiosk.org');
+      setEmail('doctor@viora.org');
       setPassword('doctor123');
     } else {
       setIsLogin(true);
-      setEmail('patient@medikiosk.org');
+      setEmail('patient@viora.org');
       setPassword('patient123');
     }
   };
@@ -163,7 +163,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, language = '
               <input
                 type="email"
                 required
-                placeholder="e.g. doctor@medikiosk.org"
+                placeholder="e.g. doctor@viora.org"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-3 border border-slate-300 rounded-xl text-sm text-slate-800 focus:ring-2 focus:ring-teal-500/20"

@@ -1,7 +1,7 @@
 import PDFDocument from 'pdfkit';
 
 /**
- * PDF Generator for MediKiosk Clinical Case Sheets (SIH 2026)
+ * PDF Generator for Viora Clinical Case Sheets (SIH 2026)
  * Builds a medical-grade PDF document containing modern SOAP notes,
  * and Doctor Sign-off details.
  */
@@ -11,7 +11,7 @@ export const buildCaseSheetPDF = (caseData, res) => {
   // Stream PDF to HTTP response stream or file
   if (res) {
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="MediKiosk_${caseData.caseId}.pdf"`);
+    res.setHeader('Content-Disposition', `attachment; filename="Viora_${caseData.caseId}.pdf"`);
     doc.pipe(res);
   }
 
@@ -26,13 +26,13 @@ export const buildCaseSheetPDF = (caseData, res) => {
     .fillColor('#0d253f')
     .fontSize(22)
     .font('Helvetica-Bold')
-    .text('MediKiosk — SIH 2026 Clinical Case Sheet', { align: 'center' });
+    .text('Viora — SIH 2026 Clinical Case Sheet', { align: 'center' });
 
   doc
     .fillColor('#0d9488')
     .fontSize(10)
     .font('Helvetica')
-    .text('MediKiosk | Problem Statement ID: 26047 | ABDM Compliant EMR Record', { align: 'center' });
+    .text('Viora | Problem Statement ID: 26047 | ABDM Compliant EMR Record', { align: 'center' });
 
   doc.moveDown(1);
   doc.strokeColor('#cbd5e1').lineWidth(1).moveTo(50, doc.y).lineTo(545, doc.y).stroke();

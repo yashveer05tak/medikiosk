@@ -1,10 +1,10 @@
-// Hindi UI translations for MediKiosk AI.
+// Hindi UI translations for Viora AI.
 
 export const TRANSLATIONS = {
   en: {
-    appTitle: "MediKiosk AI",
+    appTitle: "Viora AI",
     appSubtitle: "Clinical OPD Intake & Triage System",
-    welcome: "Welcome to MediKiosk AI",
+    welcome: "Welcome to Viora AI",
     selectLanguage: "Please select your preferred language to begin the clinical intake",
     opdTitle: "Choose Clinical Department & Identity",
     opdSubtitle: "Specify if you are visiting Allopathic or AYUSH doctors, and input your ABHA ID",
@@ -107,7 +107,7 @@ export const TRANSLATIONS = {
   },
 
   hi: {
-    appTitle: "मेडीकियोस्क एआई (MediKiosk AI)",
+    appTitle: "Viora एआई",
     appSubtitle: "क्लिनिकल ओपीडी प्रवेश एवं ट्रायज प्रणाली",
     welcome: "मेडीकियोस्क एआई में आपका स्वागत है",
     selectLanguage: "कृपया क्लिनिकल जांच शुरू करने के लिए अपनी पसंदीदा भाषा चुनें",
@@ -208,9 +208,9 @@ export const TRANSLATIONS = {
   },
 
   ta: {
-    appTitle: "மெடிகியோஸ்க் ஏஐ (MediKiosk AI)",
+    appTitle: "Viora ஏஐ",
     appSubtitle: "மருத்துவ புறநோயாளிகள் பதிவு மற்றும் அவசர மதிப்பீட்டு அமைப்பு",
-    welcome: "MediKiosk AI-க்கு நல்வரவு",
+    welcome: "Viora AI-க்கு நல்வரவு",
     selectLanguage: "தொடங்குவதற்கு உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
     opdTitle: "மருத்துவ துறை மற்றும் அடையாளத்தைத் தேர்ந்தெடுக்கவும்",
     opdSubtitle: "அலோபதி அல்லது ஆயுஷ் மருத்துவரை சந்திக்கிறீர்களா என்பதைக் குறிப்பிடவும்",
@@ -309,9 +309,9 @@ export const TRANSLATIONS = {
   },
 
   te: {
-    appTitle: "మెడికియోస్క్ ఏఐ (MediKiosk AI)",
+    appTitle: "Viora ఏఐ",
     appSubtitle: "క్లినికల్ ఓపీడీ నమోదు మరియు ట్రయాజ్ వ్యవస్థ",
-    welcome: "MediKiosk AI కి స్వాగతం",
+    welcome: "Viora AI కి స్వాగతం",
     selectLanguage: "దయచేసి మీ భాషను ఎంచుకోండి",
     opdTitle: "క్లినికల్ విభాగం & గుర్తింపును ఎంచుకోండి",
     opdSubtitle: "అలోపతి లేదా ఆయుష్ వైద్యుడిని సంప్రదిస్తున్నారా అని పేర్కొనండి",
@@ -410,9 +410,9 @@ export const TRANSLATIONS = {
   },
 
   kn: {
-    appTitle: "ಮೆಡಿಕಿಯೋಸ್ಕ್ ಎಐ (MediKiosk AI)",
+    appTitle: "Viora ಎಐ",
     appSubtitle: "ಕ್ಲಿನಿಕಲ್ ಒಪಿಡಿ ಪ್ರವೇಶ ಮತ್ತು ಟ್ರಯೇಜ್ ವ್ಯವಸ್ಥೆ",
-    welcome: "MediKiosk AI ಗೆ ಸುಸ್ವಾಗತ",
+    welcome: "Viora AI ಗೆ ಸುಸ್ವಾಗತ",
     selectLanguage: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     opdTitle: "ವಿಭಾಗ ಮತ್ತು ಗುರುತನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     opdSubtitle: "ಅಲೋಪತಿ ಅಥವಾ ಆಯುಷ್ ವೈದ್ಯರನ್ನು ಭೇಟಿ ಮಾಡುತ್ತಿದ್ದೀರಾ ಎಂದು ನಿರ್ದಿಷ್ಟಪಡಿಸಿ",
@@ -511,9 +511,9 @@ export const TRANSLATIONS = {
   },
 
   ml: {
-    appTitle: "മെഡികിയോസ്ക് എഐ (MediKiosk AI)",
+    appTitle: "Viora എഐ",
     appSubtitle: "ക്ലിനിക്കൽ ഒപിഡി ഇൻടേക്ക് & ട്രയേജ് സിസ്റ്റം",
-    welcome: "MediKiosk AI-ലേക്ക് സ്വാഗതം",
+    welcome: "Viora AI-ലേക്ക് സ്വാഗതം",
     selectLanguage: "ദയവായി നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക",
     opdTitle: "വിഭാഗവും തിരിച്ചറിയലും തിരഞ്ഞെടുക്കുക",
     opdSubtitle: "അലോപ്പതി അല്ലെങ്കിൽ ആയുഷ് ഡോക്ടറെയാണോ കാണുന്നതെന്ന് വ്യക്തമാക്കുക",
@@ -612,9 +612,9 @@ export const TRANSLATIONS = {
   },
 
   bn: {
-    appTitle: "মেডিকিয়স্ক এআই (MediKiosk AI)",
+    appTitle: "Viora এআই",
     appSubtitle: "ক্লিনিক্যাল ওপিডি ইনটেক ও ট্রায়াজ ব্যবস্থা",
-    welcome: "MediKiosk AI-তে স্বাগতম",
+    welcome: "Viora AI-তে স্বাগতম",
     selectLanguage: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
     opdTitle: "বিভাগ ও পরিচয় নির্বাচন করুন",
     opdSubtitle: "অ্যালোপ্যাথি নাকি আয়ুশ ডাক্তারের কাছে যাচ্ছেন তা উল্লেখ করুন",

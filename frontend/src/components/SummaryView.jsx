@@ -65,7 +65,7 @@ export default function SummaryView({ summaryText, fhirBundle, onRestart, langua
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fhirBundle, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `medikiosk-fhir-${fhirBundle?.id || 'bundle'}.json`);
+    downloadAnchor.setAttribute("download", `viora-fhir-${fhirBundle?.id || 'bundle'}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();

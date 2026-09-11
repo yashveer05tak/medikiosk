@@ -19,7 +19,7 @@ const generatePhysicianSummary = (session) => {
   const ayush = clinicalData?.ayushParameters || {};
   const docs = clinicalData?.extractedDocuments || [];
 
-  let summary = `# MediKiosk AI Clinical Intake Summary\n\n`;
+  let summary = `# Viora AI Clinical Intake Summary\n\n`;
   summary += `**Session ID**: \`${sessionId}\`  \n`;
   summary += `**ABHA ID**: ${abhaId || 'Not Provided'}  \n`;
   summary += `**Language**: ${language.toUpperCase()}  \n`;
